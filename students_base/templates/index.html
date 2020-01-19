@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+    <title>База студентов</title>
+  </head>
+  <body>
+
+<div class="container mt-5">
+    <form action="{% url 'index' %}" method="POST">
+            {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group row">
+                <div class="col-sm-10">
+                        {{ field.label }}
+                        {{ field }}
+                </div>
+                </div>
+        {% endfor %}
+        <select id="select_employment" class="form-control w-50">
+          <option value="Другое">Выбор занятости</option>
+          {% for el in list_employments %}
+            <option value="{{el}}">{{el}}</option>
+          {% endfor %}
+        </select>
+        <input type="submit" value="Добавить" class="btn btn-primary mt-2">
+    </form>
+
+   {% if people.count > 0 %}
+        <div class="container mt-5">
+        <input class="form-control" id="myInput" type="text" placeholder="Search..">
+        </div>
+        <table class="container table mt-5">
+          <thead>
+            <tr>
+              <th scope="col">ФИО</th>
+              <th scope="col">Дата рождения</th>
+              <th scope="col">Шифр / Наименование специальности</th>
+              <th scope="col">Бюджет / Внебюджет</th>
+              <th scope="col">Место прохождения первой практики</th>
+              <th scope="col">Место прохождения второй практики</th>
+              <th scope="col">Занятость</th>
+            </tr>
+          </thead>
+          <tbody id="myTable">
+            {% for person in people %}
+            <tr>
+              <td>{{ person.fio }}</td>
+              <td>{{ person.release_year }}</td>
+              <td>{{ person.code }}</td>
+              <td>{{ person.budget }}</td>
+              <td>{{ person.practice_one }}</td>
+              <td>{{ person.practice_two }}</td>
+              <td>{{ person.employment }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    {% endif %}
+
+    <script>
+        $(document).ready(function(){
+          $("#myInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function() {
+              $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+          });
+        });
+        jQuery(function($){
+        $('#code_spec').inputmask("99.99.99");
+        });
+        jQuery(function($){
+        $('#date_of_birth').inputmask("99.99.9999");
+        });
+
+
+        $('#select_employment').on('input', function() {
+          var employment = $('#select_employment option:selected').val();
+          $('#employment').val(employment);
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.1.60/inputmask/jquery.inputmask.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  </body>
+</html>
