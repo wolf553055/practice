@@ -59,7 +59,7 @@
                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".l{{person.id}}">
                       Подробнее
                   </button>
-                    <div class="modal fade l{{person.id}}" id="l2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal fade l{{person.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                       <div class="modal-dialog" role="document">
                         <div class="modal-content">
                           <div class="modal-header">
@@ -68,12 +68,12 @@
                               <span aria-hidden="true">&times;</span>
                             </button>
                           </div>
-                          <div class="modal-body">
+                          <div class="modal-body" id="to_print_{{person.id}}">
                             Дата рождения: {{ person.release_year }}
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                            <button type="button" class="btn btn-primary">Распечатать</button>
+                            <button type="button" class="btn btn-primary" onclick="print_this('to_print_{{person.id}}')">Распечатать</button>
                           </div>
                         </div>
                       </div>
@@ -106,6 +106,20 @@
           var employment = $('#select_employment option:selected').val();
           $('#employment').val(employment);
         });
+    </script>
+    <script>
+    window.print_this = function(id) {
+    var prtContent = document.getElementById(id);
+    var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+    WinPrint.document.write('<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">');
+    WinPrint.document.write(prtContent.innerHTML);
+    WinPrint.document.close();
+    WinPrint.setTimeout(function(){
+          WinPrint.focus();
+          WinPrint.print();
+          WinPrint.close();
+        }, 1000);
+    }
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.1.60/inputmask/jquery.inputmask.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
