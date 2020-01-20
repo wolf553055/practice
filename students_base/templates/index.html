@@ -55,6 +55,30 @@
               <td>{{ person.practice_one }}</td>
               <td>{{ person.practice_two }}</td>
               <td>{{ person.employment }}</td>
+              <td>
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".l{{person.id}}">
+                      Подробнее
+                  </button>
+                    <div class="modal fade l{{person.id}}" id="l2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">{{ person.fio }}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            Дата рождения: {{ person.release_year }}
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                            <button type="button" class="btn btn-primary">Распечатать</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+              </td>
             </tr>
             {% endfor %}
           </tbody>
