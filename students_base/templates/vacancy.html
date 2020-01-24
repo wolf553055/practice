@@ -40,15 +40,27 @@
     {% if vac.count > 0 %}
     <div class="container mt-5 d-flex flex-wrap">
         {% for key, value in vac_sk %}
-        <div class="card {% if key.status == 'Свободна' %} bg-light {% else %}border-danger text-danger {% endif %} mb-3 ml-5" style="width: 20rem;">
-            <div class="card-header">{{ key }}</div>
-            <div class="card-body">
-                <h5 class="card-title">Умения: </h5>
-                {% for el in value %}
-                    <p class="card-text">{{ el }}</p>
-                {% endfor %}
-                </div>
-            </div>
+                {% if key.status == 'Свободна' %}
+                <div class="card bg-light mb-3 ml-5" style="width: 20rem;">
+                    <div class="card-header">{{ key }}</div>
+                    <div class="card-body">
+                        <h5 class="card-title">Умения: </h5>
+                        {% for el in value %}
+                            <p class="card-text">{{ el }}</p>
+                        {% endfor %}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="card border-danger text-danger  mb-3 ml-5" style="width: 20rem;">
+                        <div class="card-header">{{ key }} {% for person in people %}{% if key.worker == person.id %}({{person.fio}}){% endif %}{% endfor %}</div>
+                        <div class="card-body">
+                            <h5 class="card-title">Умения: </h5>
+                            {% for el in value %}
+                                <p class="card-text">{{ el }}</p>
+                            {% endfor %}
+                            </div>
+                    </div>
+                {% endif %}
         {% endfor %}
     </div>
     {% endif %}

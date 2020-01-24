@@ -19,6 +19,7 @@ class Job(models.Model):
     practice_one = models.CharField(max_length=100)
     practice_two = models.CharField(max_length=100)
     budget = models.CharField(max_length=100, choices=IS_BUDGET, default='Бюджет')
+    vacancy = models.CharField(max_length=100)
 
     def __str__(self):
         return self.fio
@@ -34,6 +35,7 @@ class List_of_employment(models.Model):
 class Vacancy(models.Model):
     title = models.CharField(max_length=100)
     status = models.CharField(max_length=100, choices=IS_FREE, default='Свободна')
+    worker = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title
@@ -41,6 +43,14 @@ class Vacancy(models.Model):
 
 class Skills_Vacancy(models.Model):
     vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.title
+
+
+class Skills_Student(models.Model):
+    fio = models.ForeignKey(Job, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
 
     def __str__(self):

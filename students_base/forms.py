@@ -1,5 +1,5 @@
 from django import forms
-from .models import Job, Skills_Vacancy, Vacancy
+from .models import Job, Skills_Vacancy, Vacancy, Skills_Student
 from django.forms import inlineformset_factory
 
 
@@ -32,7 +32,7 @@ class PersonForm(forms.ModelForm):
 class VacancyForm(forms.ModelForm):
     class Meta:
         model = Vacancy
-        fields = '__all__'
+        fields = ['title', 'status']
         labels = {
             'title': 'Название вакансии',
             'status': 'Статут вакансии'

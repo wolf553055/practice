@@ -1,6 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect
-from .models import Job, List_of_employment, Vacancy, Skills_Vacancy
+from .models import Job, List_of_employment, Vacancy, Skills_Vacancy, Skills_Student
 from django.views.generic import View
 from .forms import PersonForm, VacancyForm, VacancySkillsForm
 
@@ -9,12 +9,18 @@ class Index(View):
     template = 'index.html'
 
     def get(self, request):
+        v_s = self.check_vacancy()
         people = Job.objects.order_by("fio")
+        st_list = []
+        for el in people:
+            st_list.append([el, el.skills_student_set.all()])
         list_employments = List_of_employment.objects.order_by("employment")
         context = {
             'people': people,
             'form': PersonForm(),
             'list_employments': list_employments,
+            'st_list': st_list,
+            'vacancy_for_student': v_s
         }
         return render(request, self.template, context)
 
@@ -34,12 +40,40 @@ class Index(View):
         }
         return render(request, self.template, context)
 
+    def check_vacancy(self):
+        sch = 0
+        vacancy = []
+        v_s = []
+        vac = Vacancy.objects.order_by("title")
+        people = Job.objects.order_by("fio")
+        vac_list = []
+        for el in vac:
+            vac_list.append([el, el.skills_vacancy_set.all()])
+        st_list = []
+        for el in people:
+            st_list.append([el, el.skills_student_set.all()])
+        for el, value in st_list:
+            for el_v, value_v in vac_list:
+                if el_v.status == 'Свободна':
+                    for key in value:
+                        for key_v in value_v:
+                            if str(key) == str(key_v):
+                                sch += 1
+                    if sch != 0:
+                        vacancy.append([el_v, value_v])
+                        sch = 0
+            if vacancy:
+                v_s.append([el, vacancy])
+            vacancy = []
+        return v_s
+
 
 class VacPage(View):
     template = 'vacancy.html'
 
     def get(self, request):
         vac = Vacancy.objects.order_by("title")
+        people = Job.objects.order_by("fio")
         vac_list = []
         for el in vac:
             vac_list.append([el, el.skills_vacancy_set.all()])
@@ -47,7 +81,8 @@ class VacPage(View):
             'vac': vac,
             'vac_sk': vac_list,
             'form_sk': VacancySkillsForm(),
-            'form_v': VacancyForm()
+            'form_v': VacancyForm(),
+            'people': people,
         }
         return render(request, self.template, context)
 
@@ -69,3 +104,49 @@ class VacSkPage(View):
             bound_form.save()
             return redirect('/students_base/vacancy')
         return redirect('/students_base/vacancy')
+
+
+class StSkPage(View):
+    def post(self, request):
+        id_st = request.POST.get("id")
+        student = Job.objects.get(id=id_st)
+        if request.method == 'POST':
+            st_skills = Skills_Student()
+            st_skills.fio = student
+            st_skills.title = request.POST.get("title")
+            st_skills.save()
+            return redirect('/students_base/')
+        return redirect('/students_base/')
+
+
+class AddVacancy(View):
+    def post(self, request):
+        vacancy = request.POST.get("vacancy")
+        id_st = request.POST.get("id_st")
+        student = Job.objects.get(id=id_st)
+        try:
+            vac = Vacancy.objects.get(title=vacancy)
+            if request.method == 'POST':
+                student.vacancy = vacancy
+                student.save()
+                vac.worker = student.id
+                vac.save()
+                self.check_vacancy()
+                return redirect('/students_base/')
+        except ValueError:
+            vac = Vacancy()
+            vac.title = vacancy
+            vac.status = 'Свободна'
+            student.vacancy = vacancy
+            student.save()
+            vac.worker = student.id
+            vac.save()
+            self.check_vacancy()
+            return redirect('/students_base/')
+
+    def check_vacancy(self):
+        vac = Vacancy.objects.all()
+        for el in vac:
+            if el.worker:
+                el.status = "Занята"
+                el.save()

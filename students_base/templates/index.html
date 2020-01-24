@@ -68,13 +68,62 @@
                               <span aria-hidden="true">&times;</span>
                             </button>
                           </div>
-                          <div class="modal-body" id="to_print_{{person.id}}">
-                            Дата рождения: {{ person.release_year }}
-                          </div>
+
+                            <div class="modal-body" id="to_print_{{person.id}}">
+                                {% if not person.vacancy %}
+                                <h2>Умения:</h2>
+                            {% for key, value in st_list %}
+                                {% if key.id == person.id %}
+                                    {% for el in value %}
+                                        <p>{{el}}</p>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+
+                                <h2>Вакансии:</h2>
+                                {% for key, value in vacancy_for_student %}
+                                    {% if key.id == person.id%}
+                                        {% for vac, sk_vac in value %}
+                                            <h3 class="text-success">{{vac.title}}</h3>
+                                            <p>Умения для вакансии {{vac.title.lower}}:</p>
+                                            {% for sk in sk_vac %}
+                                                <p>{{sk}}</p>
+                                            {% endfor %}
+                                        {% endfor %}
+                                            <h3>Выбор вакансии</h3>
+                                            <form action="{% url 'add_vacancy' %}" method="post">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="id_st" value="{{person.id}}"/>
+                                                <input type="text" name="vacancy" id="vacancy"/>
+
+                                                <select id="select_vacancy" class="form-control w-50">
+                                                  <option value="Другое">Выбор вакансии</option>
+                                                    {% for vac, sk_vac in value %}
+                                                  <option value="{{vac.title}}">{{vac.title}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <input type="submit" value="Добавить" class="btn btn-primary mt-2">
+                                            </form>
+                                    {% endif %}
+                                {% endfor %}
+
+                            </div>
+                            <div class="container">
+                                <h2>Добавить умение</h2>
+                                <form action="{% url 'student_skills' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="id" value="{{person.id}}"/>
+                                    <input type="text" name="title" class="form-control"/>
+                                    <input type="submit" value="Добавить" class="btn btn-primary mt-2">
+                                </form>
+                            </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
                             <button type="button" class="btn btn-primary" onclick="print_this('to_print_{{person.id}}')">Распечатать</button>
                           </div>
+                            {% else %}
+                                <p>Вакансия: {{person.vacancy}}</p>
+                                {% endif %}
                         </div>
                       </div>
                     </div>
@@ -105,6 +154,11 @@
         $('#select_employment').on('input', function() {
           var employment = $('#select_employment option:selected').val();
           $('#employment').val(employment);
+        });
+
+        $('#select_vacancy').on('input', function() {
+          var vacancy = $('#select_vacancy option:selected').val();
+          $('#vacancy').val(vacancy);
         });
     </script>
     <script>
