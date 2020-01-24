@@ -5,11 +5,6 @@ IS_BUDGET = (
     ('Платник', 'Платник')
 )
 
-IS_FREE = (
-    ('Свободна', 'Свободна'),
-    ('Занята', 'Занята')
-)
-
 
 class Job(models.Model):
     fio = models.CharField(max_length=100)
@@ -34,7 +29,6 @@ class List_of_employment(models.Model):
 
 class Vacancy(models.Model):
     title = models.CharField(max_length=100)
-    status = models.CharField(max_length=100, choices=IS_FREE, default='Свободна')
     worker = models.IntegerField(default=0)
 
     def __str__(self):

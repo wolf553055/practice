@@ -5,22 +5,48 @@ from django.views.generic import View
 from .forms import PersonForm, VacancyForm, VacancySkillsForm
 
 
+def check_vacancy():
+    sch = 0
+    vacancy = []
+    v_s = []
+    vac = Vacancy.objects.order_by("title")
+    people = Job.objects.order_by("fio")
+    vac_list = []
+    for el in vac:
+        vac_list.append([el, el.skills_vacancy_set.all()])
+    st_list = []
+    for el in people:
+        st_list.append([el, el.skills_student_set.all()])
+    for el, value in st_list:
+        for el_v, value_v in vac_list:
+            if not el_v.worker:
+                for key in value:
+                    for key_v in value_v:
+                        if str(key) == str(key_v):
+                            sch += 1
+                if sch != 0:
+                    vacancy.append([el_v, value_v])
+                    sch = 0
+        if vacancy:
+            v_s.append([el, value, vacancy])
+        else:
+            v_s.append([el, value, []])
+        vacancy = []
+    return v_s
+
+
 class Index(View):
     template = 'index.html'
 
     def get(self, request):
-        v_s = self.check_vacancy()
-        people = Job.objects.order_by("fio")
-        st_list = []
-        for el in people:
-            st_list.append([el, el.skills_student_set.all()])
+        st_list = check_vacancy()
+        for person, value, vacancy in st_list:
+            print(value)
         list_employments = List_of_employment.objects.order_by("employment")
         context = {
-            'people': people,
             'form': PersonForm(),
             'list_employments': list_employments,
             'st_list': st_list,
-            'vacancy_for_student': v_s
         }
         return render(request, self.template, context)
 
@@ -39,33 +65,6 @@ class Index(View):
             'form': bound_form
         }
         return render(request, self.template, context)
-
-    def check_vacancy(self):
-        sch = 0
-        vacancy = []
-        v_s = []
-        vac = Vacancy.objects.order_by("title")
-        people = Job.objects.order_by("fio")
-        vac_list = []
-        for el in vac:
-            vac_list.append([el, el.skills_vacancy_set.all()])
-        st_list = []
-        for el in people:
-            st_list.append([el, el.skills_student_set.all()])
-        for el, value in st_list:
-            for el_v, value_v in vac_list:
-                if el_v.status == 'Свободна':
-                    for key in value:
-                        for key_v in value_v:
-                            if str(key) == str(key_v):
-                                sch += 1
-                    if sch != 0:
-                        vacancy.append([el_v, value_v])
-                        sch = 0
-            if vacancy:
-                v_s.append([el, vacancy])
-            vacancy = []
-        return v_s
 
 
 class VacPage(View):
@@ -131,22 +130,12 @@ class AddVacancy(View):
                 student.save()
                 vac.worker = student.id
                 vac.save()
-                self.check_vacancy()
                 return redirect('/students_base/')
         except ValueError:
             vac = Vacancy()
             vac.title = vacancy
-            vac.status = 'Свободна'
             student.vacancy = vacancy
             student.save()
             vac.worker = student.id
             vac.save()
-            self.check_vacancy()
             return redirect('/students_base/')
-
-    def check_vacancy(self):
-        vac = Vacancy.objects.all()
-        for el in vac:
-            if el.worker:
-                el.status = "Занята"
-                el.save()

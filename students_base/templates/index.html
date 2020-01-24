@@ -29,7 +29,6 @@
         <input type="submit" value="Добавить" class="btn btn-primary mt-2">
     </form>
 
-   {% if people.count > 0 %}
         <div class="container mt-5">
         <input class="form-control" id="myInput" type="text" placeholder="Search..">
         </div>
@@ -46,7 +45,7 @@
             </tr>
           </thead>
           <tbody id="myTable">
-            {% for person in people %}
+            {% for person, value, vacancy in st_list %}
             <tr>
               <td>{{ person.fio }}</td>
               <td>{{ person.release_year }}</td>
@@ -72,18 +71,12 @@
                             <div class="modal-body" id="to_print_{{person.id}}">
                                 {% if not person.vacancy %}
                                 <h2>Умения:</h2>
-                            {% for key, value in st_list %}
-                                {% if key.id == person.id %}
                                     {% for el in value %}
                                         <p>{{el}}</p>
                                     {% endfor %}
-                                {% endif %}
-                            {% endfor %}
 
                                 <h2>Вакансии:</h2>
-                                {% for key, value in vacancy_for_student %}
-                                    {% if key.id == person.id%}
-                                        {% for vac, sk_vac in value %}
+                                        {% for vac, sk_vac in vacancy %}
                                             <h3 class="text-success">{{vac.title}}</h3>
                                             <p>Умения для вакансии {{vac.title.lower}}:</p>
                                             {% for sk in sk_vac %}
@@ -98,15 +91,12 @@
 
                                                 <select id="select_vacancy" class="form-control w-50">
                                                   <option value="Другое">Выбор вакансии</option>
-                                                    {% for vac, sk_vac in value %}
+                                                    {% for vac, sk_vac in vacancy %}
                                                   <option value="{{vac.title}}">{{vac.title}}</option>
                                                     {% endfor %}
                                                 </select>
                                                 <input type="submit" value="Добавить" class="btn btn-primary mt-2">
                                             </form>
-                                    {% endif %}
-                                {% endfor %}
-
                             </div>
                             <div class="container">
                                 <h2>Добавить умение</h2>
@@ -132,7 +122,6 @@
             {% endfor %}
           </tbody>
         </table>
-    {% endif %}
 
     <script>
         $(document).ready(function(){

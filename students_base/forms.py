@@ -32,14 +32,12 @@ class PersonForm(forms.ModelForm):
 class VacancyForm(forms.ModelForm):
     class Meta:
         model = Vacancy
-        fields = ['title', 'status']
+        fields = ['title']
         labels = {
             'title': 'Название вакансии',
-            'status': 'Статут вакансии'
         }
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'status': forms.RadioSelect()
         }
 
 

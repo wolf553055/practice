@@ -40,7 +40,7 @@
     {% if vac.count > 0 %}
     <div class="container mt-5 d-flex flex-wrap">
         {% for key, value in vac_sk %}
-                {% if key.status == 'Свободна' %}
+                {% if not key.worker %}
                 <div class="card bg-light mb-3 ml-5" style="width: 20rem;">
                     <div class="card-header">{{ key }}</div>
                     <div class="card-body">
