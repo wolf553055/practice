@@ -40,8 +40,6 @@ class Index(View):
 
     def get(self, request):
         st_list = check_vacancy()
-        for person, value, vacancy in st_list:
-            print(value)
         list_employments = List_of_employment.objects.order_by("employment")
         context = {
             'form': PersonForm(),
