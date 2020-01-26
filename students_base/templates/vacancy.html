@@ -52,7 +52,7 @@
                     </div>
                 {% else %}
                     <div class="card border-danger text-danger  mb-3 ml-5" style="width: 20rem;">
-                        <div class="card-header">{{ key }} {% for person in people %}{% if key.worker == person.id %}({{person.fio}}){% endif %}{% endfor %}</div>
+                        <div class="card-header">{{ key }} ({{key.worker.fio}})</div>
                         <div class="card-body">
                             <h5 class="card-title">Умения: </h5>
                             {% for el in value %}

@@ -5,6 +5,11 @@ IS_BUDGET = (
     ('Платник', 'Платник')
 )
 
+IS_FREE = (
+    ('Свободна', 'Свободна'),
+    ('Занята', 'Занята')
+)
+
 
 class Job(models.Model):
     fio = models.CharField(max_length=100)
@@ -14,7 +19,7 @@ class Job(models.Model):
     practice_one = models.CharField(max_length=100)
     practice_two = models.CharField(max_length=100)
     budget = models.CharField(max_length=100, choices=IS_BUDGET, default='Бюджет')
-    vacancy = models.CharField(max_length=100)
+    vacancy_st = models.CharField(max_length=100)
 
     def __str__(self):
         return self.fio
@@ -29,7 +34,7 @@ class List_of_employment(models.Model):
 
 class Vacancy(models.Model):
     title = models.CharField(max_length=100)
-    worker = models.IntegerField(default=0)
+    worker = models.OneToOneField(Job, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.title

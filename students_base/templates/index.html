@@ -87,12 +87,10 @@
                                             <form action="{% url 'add_vacancy' %}" method="post">
                                                 {% csrf_token %}
                                                 <input type="hidden" name="id_st" value="{{person.id}}"/>
-                                                <input type="text" name="vacancy" id="vacancy"/>
-
-                                                <select id="select_vacancy" class="form-control w-50">
+                                                <select name="vacancy" id="vacancy" class="form-control w-50">
                                                   <option value="Другое">Выбор вакансии</option>
                                                     {% for vac, sk_vac in vacancy %}
-                                                  <option value="{{vac.title}}">{{vac.title}}</option>
+                                                  <option value="{{vac.id}}">{{vac.title}}</option>
                                                     {% endfor %}
                                                 </select>
                                                 <input type="submit" value="Добавить" class="btn btn-primary mt-2">
@@ -112,7 +110,7 @@
                             <button type="button" class="btn btn-primary" onclick="print_this('to_print_{{person.id}}')">Распечатать</button>
                           </div>
                             {% else %}
-                                <p>Вакансия: {{person.vacancy}}</p>
+                                <p>Вакансия: {{person.vacancy_st}}</p>
                                 {% endif %}
                         </div>
                       </div>
@@ -143,11 +141,6 @@
         $('#select_employment').on('input', function() {
           var employment = $('#select_employment option:selected').val();
           $('#employment').val(employment);
-        });
-
-        $('#select_vacancy').on('input', function() {
-          var vacancy = $('#select_vacancy option:selected').val();
-          $('#vacancy').val(vacancy);
         });
     </script>
     <script>

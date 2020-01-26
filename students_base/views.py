@@ -122,18 +122,14 @@ class AddVacancy(View):
         id_st = request.POST.get("id_st")
         student = Job.objects.get(id=id_st)
         try:
-            vac = Vacancy.objects.get(title=vacancy)
+            vac = Vacancy.objects.get(id=vacancy)
+            print(vac.worker)
             if request.method == 'POST':
-                student.vacancy = vacancy
+                student.vacancy_st = vac.title
                 student.save()
-                vac.worker = student.id
+                vac.worker = student
                 vac.save()
                 return redirect('/students_base/')
         except ValueError:
-            vac = Vacancy()
-            vac.title = vacancy
-            student.vacancy = vacancy
-            student.save()
-            vac.worker = student.id
-            vac.save()
+            print("lol")
             return redirect('/students_base/')
