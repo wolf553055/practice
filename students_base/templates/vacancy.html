@@ -8,62 +8,72 @@
     <title>Вакансии</title>
   </head>
   <body>
-    <form action="{% url 'vacancy' %}" method="POST" class="container mt-5">
+    <form action="{% url 'add_org' %}" method="POST" class="container mt-5">
         {% csrf_token %}
-        <h3>Добавить вакансию</h3>
-        {% for field in form_v %}
+        <h3>Добавить организацию</h3>
+        {% for field in form_org %}
             <div class="form-group row">
                 <div class="col-sm-10">
                         {{ field.label }}
                         {{ field }}
                 </div>
-                </div>
-        {% endfor %}
-        <input type="submit" value="Добавить" class="btn btn-primary mt-2">
-    </form>
-
-    <form action="{% url 'vacancy_skills' %}" method="POST" class="container mt-5">
-        {% csrf_token %}
-        <h3>Добавить умения для вакансии</h3>
-        {% for field in form_sk %}
-            <div class="form-group row">
-                <div class="col-sm-10">
-                        {{ field.label }}
-                        {{ field }}
-                </div>
-                </div>
+            </div>
         {% endfor %}
         <input type="submit" value="Добавить" class="btn btn-primary mt-2">
     </form>
     <hr>
 
-    {% if vac.count > 0 %}
-    <div class="container mt-5 d-flex flex-wrap">
-        {% for key, value in vac_sk %}
-                {% if not key.worker %}
-                <div class="card bg-light mb-3 ml-5" style="width: 20rem;">
-                    <div class="card-header">{{ key }}</div>
-                    <div class="card-body">
-                        <h5 class="card-title">Умения: </h5>
-                        {% for el in value %}
-                            <p class="card-text">{{ el }}</p>
-                        {% endfor %}
+    {% if org_list.count > 0 %}
+            {% for org in org_list %}
+                <h3 class="container">{{ org.title }}</h3>
+                <div class="container mt-5 d-flex flex-wrap">
+                    {% for vac in org.vacancy_set.all %}
+                        {% if not vac.worker %}
+                            <div class="card bg-light mb-3 ml-5" style="width: 20rem;">
+                            <div class="card-header">{{ vac }}</div>
+                                <div class="card-body">
+                                    <h5 class="card-title">Умения: </h5>
+                                    {% for skill in vac.skills_vacancy_set.all %}
+                                        <p class="card-text">{{ skill }}</p>
+                                    {% endfor %}
+                                    <form action="{% url 'vacancy_skills' %}" method="POST">
+                                        {% csrf_token %}
+                                        <label for="title">Добавить умение</label>
+                                        <input type="text" name="title" class="form-control"/>
+                                        <input type="hidden" name="vacancy" value="{{ vac.id }}"/>
+                                    </form>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="card border-danger text-danger  mb-3 ml-5" style="width: 20rem;">
+                                <div class="card-header">{{ vac }} ({{vac.worker.fio}})</div>
+                                <div class="card-body">
+                                    <h5 class="card-title">Умения: </h5>
+                                    {% for skill in vac.job_set.all %}
+                                        <p class="card-text">{{ skill }}</p>
+                                    {% endfor %}
+                                    </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                    </div>
+                    <div class="container">
+                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse{{org.id}}" aria-expanded="false">
+                            Добавить вакансию
+                        </button>
+                        <div class="collapse w-25 mt-3" id="collapse{{org.id}}" style="border: 1px solid gray; border-radius: 10px; padding-bottom: 2em;">
+                            <form action="{% url 'add_vacancy_org' %}" method="POST" class="container mt-5">
+                                {% csrf_token %}
+                                <label for="title">Название вакансии</label>
+                                <input type="text" name="title" class="form-control"/>
+                                <input type="hidden" name="organization" value="{{ org.id }}"/>
+                            </form>
                         </div>
                     </div>
-                {% else %}
-                    <div class="card border-danger text-danger  mb-3 ml-5" style="width: 20rem;">
-                        <div class="card-header">{{ key }} ({{key.worker.fio}})</div>
-                        <div class="card-body">
-                            <h5 class="card-title">Умения: </h5>
-                            {% for el in value %}
-                                <p class="card-text">{{ el }}</p>
-                            {% endfor %}
-                            </div>
-                    </div>
-                {% endif %}
-        {% endfor %}
-    </div>
+                    <hr>
+            {% endfor %}
     {% endif %}
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.1.60/inputmask/jquery.inputmask.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>

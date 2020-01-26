@@ -7,4 +7,6 @@ urlpatterns = [
     path('vacancy_skills/', VacSkPage.as_view(), name='vacancy_skills'),
     path('student_skills/', StSkPage.as_view(), name='student_skills'),
     path('add_vacancy/', AddVacancy.as_view(), name='add_vacancy'),
+    path('add_org/', AddOrganization.as_view(), name='add_org'),
+    path('add_vacancy_org/', AddVacancyOrganization.as_view(), name='add_vacancy_org'),
 ]

@@ -1,8 +1,8 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect
-from .models import Job, List_of_employment, Vacancy, Skills_Vacancy, Skills_Student
+from .models import *
 from django.views.generic import View
-from .forms import PersonForm, VacancyForm, VacancySkillsForm
+from .forms import *
 
 
 def check_vacancy():
@@ -69,17 +69,10 @@ class VacPage(View):
     template = 'vacancy.html'
 
     def get(self, request):
-        vac = Vacancy.objects.order_by("title")
-        people = Job.objects.order_by("fio")
-        vac_list = []
-        for el in vac:
-            vac_list.append([el, el.skills_vacancy_set.all()])
+        org = Organization.objects.order_by("title")
         context = {
-            'vac': vac,
-            'vac_sk': vac_list,
-            'form_sk': VacancySkillsForm(),
-            'form_v': VacancyForm(),
-            'people': people,
+            'form_org': OrganizationForm(),
+            'org_list': org
         }
         return render(request, self.template, context)
 
@@ -96,10 +89,13 @@ class VacPage(View):
 
 class VacSkPage(View):
     def post(self, request):
-        bound_form = VacancySkillsForm(request.POST)
-        if bound_form.is_valid():
-            bound_form.save()
-            return redirect('/students_base/vacancy')
+        if request.method == 'POST':
+            sk_vac = Skills_Vacancy()
+            sk_vac.title = request.POST.get("title")
+            vac_id = request.POST.get("vacancy")
+            vac = Vacancy.objects.get(id=vac_id)
+            sk_vac.vacancy = vac
+            sk_vac.save()
         return redirect('/students_base/vacancy')
 
 
@@ -133,3 +129,25 @@ class AddVacancy(View):
         except ValueError:
             print("lol")
             return redirect('/students_base/')
+
+
+class AddOrganization(View):
+    def post(self, request):
+        bound_form = OrganizationForm(request.POST)
+        if bound_form.is_valid():
+            bound_form.save()
+            return redirect('/students_base/vacancy')
+        return redirect('/students_base/vacancy')
+
+
+class AddVacancyOrganization(View):
+    def post(self, request):
+        if request.method == 'POST':
+            vacancy = Vacancy()
+            vacancy.title = request.POST.get("title")
+            organization_id = request.POST.get("organization")
+            organization = Organization.objects.get(id=organization_id)
+            vacancy.organization = organization
+            vacancy.save()
+            return redirect('/students_base/vacancy')
+        return redirect('/students_base/vacancy')

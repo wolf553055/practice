@@ -32,9 +32,17 @@ class List_of_employment(models.Model):
         return self.employment
 
 
+class Organization(models.Model):
+    title = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.title
+
+
 class Vacancy(models.Model):
     title = models.CharField(max_length=100)
     worker = models.OneToOneField(Job, on_delete=models.CASCADE, null=True, blank=True)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.title
