@@ -45,7 +45,7 @@
             </tr>
           </thead>
           <tbody id="myTable">
-            {% for person, value, vacancy in st_list %}
+            {% for person, vacancy in people %}
             <tr>
               <td>{{ person.fio }}</td>
               <td>{{ person.release_year }}</td>
@@ -54,7 +54,7 @@
               <td>{{ person.practice_one }}</td>
               <td>{{ person.practice_two }}</td>
               <td>{{ person.employment }}</td>
-              <td>
+                <td>
                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".l{{person.id}}">
                       Подробнее
                   </button>
@@ -69,18 +69,29 @@
                           </div>
 
                             <div class="modal-body" id="to_print_{{person.id}}">
-                                {% if not person.vacancy %}
+                                {% if not person.vacancy_st %}
                                 <h2>Умения:</h2>
-                                    {% for el in value %}
-                                        <p>{{el}}</p>
+                                {% if person.skills_student_set.all %}
+                                    {% for skill in person.skills_student_set.all %}
+                                        <p>{{skill}}</p>
                                     {% endfor %}
+                                {% else %}
+                                <p>Умений пока нету :)</p>
+                                {% endif %}
+                                <h2>Добавить умение</h2>
+                                <form action="{% url 'student_skills' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="id" value="{{person.id}}"/>
+                                    <input type="text" name="title" class="form-control"/>
+                                </form>
 
+                                {% if vacancy %}
                                 <h2>Вакансии:</h2>
-                                        {% for vac, sk_vac in vacancy %}
+                                        {% for vac in vacancy %}
                                             <h3 class="text-success">{{vac.title}}</h3>
                                             <p>Умения для вакансии {{vac.title.lower}}:</p>
-                                            {% for sk in sk_vac %}
-                                                <p>{{sk}}</p>
+                                            {% for skill in vac.skills_vacancy_set.all %}
+                                                <p>{{skill}}</p>
                                             {% endfor %}
                                         {% endfor %}
                                             <h3>Выбор вакансии</h3>
@@ -89,21 +100,13 @@
                                                 <input type="hidden" name="id_st" value="{{person.id}}"/>
                                                 <select name="vacancy" id="vacancy" class="form-control w-50">
                                                   <option value="Другое">Выбор вакансии</option>
-                                                    {% for vac, sk_vac in vacancy %}
-                                                  <option value="{{vac.id}}">{{vac.title}}</option>
+                                                    {% for vac in vacancy %}
+                                                  <option value="{{vac.id}}">{{vac}}</option>
                                                     {% endfor %}
                                                 </select>
                                                 <input type="submit" value="Добавить" class="btn btn-primary mt-2">
                                             </form>
-                            </div>
-                            <div class="container">
-                                <h2>Добавить умение</h2>
-                                <form action="{% url 'student_skills' %}" method="post">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="id" value="{{person.id}}"/>
-                                    <input type="text" name="title" class="form-control"/>
-                                    <input type="submit" value="Добавить" class="btn btn-primary mt-2">
-                                </form>
+                                {% endif %}
                             </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>

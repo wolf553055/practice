@@ -49,7 +49,7 @@
                                 <div class="card-header">{{ vac }} ({{vac.worker.fio}})</div>
                                 <div class="card-body">
                                     <h5 class="card-title">Умения: </h5>
-                                    {% for skill in vac.job_set.all %}
+                                    {% for skill in vac.skills_vacancy_set.all %}
                                         <p class="card-text">{{ skill }}</p>
                                     {% endfor %}
                                     </div>

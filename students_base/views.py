@@ -6,45 +6,29 @@ from .forms import *
 
 
 def check_vacancy():
-    sch = 0
-    vacancy = []
-    v_s = []
-    vac = Vacancy.objects.order_by("title")
+    people_vac = []
+    vacancy_p = []
+    vacancy = Vacancy.objects.order_by("title")
     people = Job.objects.order_by("fio")
-    vac_list = []
-    for el in vac:
-        vac_list.append([el, el.skills_vacancy_set.all()])
-    st_list = []
-    for el in people:
-        st_list.append([el, el.skills_student_set.all()])
-    for el, value in st_list:
-        for el_v, value_v in vac_list:
-            if not el_v.worker:
-                for key in value:
-                    for key_v in value_v:
-                        if str(key) == str(key_v):
-                            sch += 1
-                if sch != 0:
-                    vacancy.append([el_v, value_v])
-                    sch = 0
-        if vacancy:
-            v_s.append([el, value, vacancy])
-        else:
-            v_s.append([el, value, []])
-        vacancy = []
-    return v_s
+    for person in people:
+        for vac in vacancy:
+            if list(set(person.skills_student_set.all()) - set(vac.skills_vacancy_set.all())) and not vac.worker:
+                vacancy_p.append(vac)
+        people_vac.append([person, vacancy_p])
+        vacancy_p = []
+    return people_vac
 
 
 class Index(View):
     template = 'index.html'
 
     def get(self, request):
-        st_list = check_vacancy()
+        people = check_vacancy()
         list_employments = List_of_employment.objects.order_by("employment")
         context = {
             'form': PersonForm(),
             'list_employments': list_employments,
-            'st_list': st_list,
+            'people': people,
         }
         return render(request, self.template, context)
 
