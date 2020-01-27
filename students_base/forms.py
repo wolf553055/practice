@@ -64,3 +64,10 @@ class OrganizationForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'})
         }
+
+
+class ImageForm(forms.Form):
+    docfile = forms.FileField(
+        label='Добавить документ',
+        help_text='max. 42 megabytes'
+    )

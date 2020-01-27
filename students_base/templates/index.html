@@ -119,6 +119,46 @@
                       </div>
                     </div>
               </td>
+              <td>
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal{{ person.id }}">
+                      Документы
+                    </button>
+
+                    <div class="modal fade" id="Modal{{ person.id }}" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="ModalLabel">Подтверждающие документы</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                              {% if person.documentimg_set.all %}
+                                {% for img in person.documentimg_set.all %}
+                                    <img src="{{ MEDIA_URL }}{{ img.document }}" alt="h" class="img-thumbnail">
+                                    <hr>
+                                {% endfor %}
+                              {% else %}
+                                <p>Документов пока нету :)</p>
+                              {% endif %}
+                              <form method="post" action="{% url 'add_document' %}" enctype="multipart/form-data">
+                                  {% csrf_token %}
+                                    <p>{{ imgform.docfile.label_tag }} {{ form.docfile.help_text }}</p>
+                                        {{ imgform.docfile }}
+                                    <p>
+                                        <input type="hidden" name="worker" value="{{person.id}}">
+                                    </p>
+                                    <input type="submit" value="Добавить" class="btn btn-primary mt-2">
+                              </form>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                          </div>
+                        </div>
+                      </div>
+              </td>
             </tr>
             {% endfor %}
           </tbody>

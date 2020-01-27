@@ -1,4 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .models import *
 from django.views.generic import View
@@ -8,13 +9,21 @@ from .forms import *
 def check_vacancy():
     people_vac = []
     vacancy_p = []
+    sch = 0
     vacancy = Vacancy.objects.order_by("title")
     people = Job.objects.order_by("fio")
     for person in people:
         for vac in vacancy:
-            if list(set(person.skills_student_set.all()) - set(vac.skills_vacancy_set.all())) and not vac.worker:
-                vacancy_p.append(vac)
-        people_vac.append([person, vacancy_p])
+            if not vac.worker:
+                for key in person.skills_student_set.all():
+                    for key_v in vac.skills_vacancy_set.all():
+                        if str(key) == str(key_v):
+                            sch += 1
+                if sch != 0:
+                    vacancy_p.append(vac)
+                    sch = 0
+        if vacancy:
+            people_vac.append([person, vacancy_p])
         vacancy_p = []
     return people_vac
 
@@ -29,6 +38,7 @@ class Index(View):
             'form': PersonForm(),
             'list_employments': list_employments,
             'people': people,
+            'imgform': ImageForm,
         }
         return render(request, self.template, context)
 
@@ -103,7 +113,6 @@ class AddVacancy(View):
         student = Job.objects.get(id=id_st)
         try:
             vac = Vacancy.objects.get(id=vacancy)
-            print(vac.worker)
             if request.method == 'POST':
                 student.vacancy_st = vac.title
                 student.save()
@@ -111,7 +120,6 @@ class AddVacancy(View):
                 vac.save()
                 return redirect('/students_base/')
         except ValueError:
-            print("lol")
             return redirect('/students_base/')
 
 
@@ -135,3 +143,16 @@ class AddVacancyOrganization(View):
             vacancy.save()
             return redirect('/students_base/vacancy')
         return redirect('/students_base/vacancy')
+
+
+class AddDocument(View):
+    def post(self, request):
+        if request.method == 'POST':
+            form = ImageForm(request.POST, request.FILES)
+            if form.is_valid():
+                worker = Job.objects.get(id=request.POST['worker'])
+                newimg = DocumentImg(document=request.FILES['docfile'], worker=worker)
+                newimg.save()
+                return redirect('/students_base/')
+            else:
+                return redirect('/students_base/')
