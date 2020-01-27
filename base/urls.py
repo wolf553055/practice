@@ -8,4 +8,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('students_base/', include('students_base.urls')),
     path('', RedirectView.as_view(url='/students_base/', permanent=True)),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
