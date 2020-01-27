@@ -32,7 +32,7 @@
         <div class="container mt-5">
         <input class="form-control" id="myInput" type="text" placeholder="Search..">
         </div>
-        <table class="container table mt-5">
+        <table class="container table mt-5" id="to_print">
           <thead>
             <tr>
               <th scope="col">ФИО</th>
@@ -110,7 +110,6 @@
                             </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                            <button type="button" class="btn btn-primary" onclick="print_this('to_print_{{person.id}}')">Распечатать</button>
                           </div>
                             {% else %}
                                 <p>Вакансия: {{person.vacancy_st}}</p>
@@ -136,6 +135,7 @@
                           <div class="modal-body">
                               {% if person.documentimg_set.all %}
                                 {% for img in person.documentimg_set.all %}
+                                    <h3>{{img.title}}:</h3>
                                     <img src="{{ MEDIA_URL }}{{ img.document }}" alt="h" class="img-thumbnail">
                                     <hr>
                                 {% endfor %}
@@ -144,17 +144,18 @@
                               {% endif %}
                               <form method="post" action="{% url 'add_document' %}" enctype="multipart/form-data">
                                   {% csrf_token %}
-                                    <p>{{ imgform.docfile.label_tag }} {{ form.docfile.help_text }}</p>
+                                  <label for="title">Название документа</label> <br>
+                                  <input type="text" name="title" class="form-control">
+                                  <div class="mt-3">
+                                      {{ imgform.docfile.label_tag }}
                                         {{ imgform.docfile }}
-                                    <p>
-                                        <input type="hidden" name="worker" value="{{person.id}}">
-                                    </p>
-                                    <input type="submit" value="Добавить" class="btn btn-primary mt-2">
+                                  </div>
+                                  <input type="hidden" name="worker" value="{{person.id}}">
+                                  <input type="submit" value="Добавить" class="btn btn-primary mt-2">
                               </form>
                           </div>
                           <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
                           </div>
                         </div>
                       </div>
@@ -163,6 +164,8 @@
             {% endfor %}
           </tbody>
         </table>
+        <button type="button" class="btn btn-primary" onclick="tableToExcel('to_print', 'Таблица студентов', 'Таблица.xls')">Импорт в exel</button>
+
 
     <script>
         $(document).ready(function(){
