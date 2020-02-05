@@ -9,29 +9,19 @@
   </head>
   <body>
 
-  <table class="container table mt-5" id="to_print">
-    <thead>
-      <tr>
-        <th scope="col">ФИО</th>
-        <th scope="col">Дата рождения</th>
-        <th scope="col">Шифр / Наименование специальности</th>
-        <th scope="col">Бюджет / Внебюджет</th>
-        <th scope="col">Место прохождения первой практики</th>
-        <th scope="col">Место прохождения второй практики</th>
-        <th scope="col">Занятость</th>
-      </tr>
-    </thead>
-    <tbody id="myTable">
-      <tr>
-        <td>{{ person.fio }}</td>
-        <td>{{ person.release_year }}</td>
-        <td>{{ person.code }}</td>
-        <td>{{ person.budget }}</td>
-        <td>{{ person.practice_one }}</td>
-        <td>{{ person.practice_two }}</td>
-        <td>{{ person.employment }}</td>
-    </tbody>
-  </table>
+  <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 bg-light">
+    <div class="col-md-5 mx-auto">
+      <h1 class="display-4 font-weight-normal">{{ person.fio }}</h1>
+      <p class="lead font-weight-normal"><p class="lead font-weight-bold">Дата рождения:</p> {{ person.release_year }}</p>
+      <p class="lead font-weight-normal"><p class="lead font-weight-bold">Шифр / Наименование специальности:</p> {{ person.code }}</p>
+      <p class="lead font-weight-normal"><p class="lead font-weight-bold">Бюджет / Внебюджет:</p> {{ person.budget }}</p>
+      <p class="lead font-weight-normal"><p class="lead font-weight-bold">Место прохождения первой практики:</p> {{ person.practice_one }}</p>
+      <p class="lead font-weight-normal"><p class="lead font-weight-bold">Место прохождения второй практики:</p> {{ person.practice_two }}</p>
+      <p class="lead font-weight-normal"><p class="lead font-weight-bold">Занятость:</p> {{ person.employment }}</p>
+      <a class="lead font-weight-normal"><p class="lead font-weight-bold">Email:</p> <a href="mailto:{{ person.email }}" class="text-reset">{{ person.email }}</a></a>
+      <p class="lead font-weight-normal"><p class="lead font-weight-bold">Номер телефона:</p> <a href="tel:{{ person.phone_number }}" class="text-reset">{{ person.phone_number }}</a></p>
+    </div>
+  </div>
   <hr>
   <div class="container">
       <form action="{% url 'student_detail' pk=person.id %}" method="post" class="container mt-5">
@@ -48,8 +38,8 @@
         <div class="list-group container mb-3 mt-5">
           <div class="list-group-item active">
             <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">Звонок ({{call.status}})</h5>
-              <small class="text-warning">{{call.call_time}}</small>
+              <a href="tel:{{ person.phone_number }}"><h5 class="mb-1 text-light">{{ person.phone_number }}</h5></a>
+              <small class="text-light">{{call.call_time}}</small>
             </div>
             <p class="mb-1">{{call.comment}}</p>
             <form action="{% url 'calls_cancle' pk=call.id %}" method="post">
@@ -67,8 +57,8 @@
             <div class="list-group container mb-3" style="word-wrap: break-word;">
               <div class="list-group-item">
                 <div class="d-flex w-100 justify-content-between">
-                  <h5 class="mb-1 w50">Звонок ({{call.status}})</h5>
-                  <small>{{call.call_time}}</small>
+                  <a href="tel:{{ person.phone_number }}"><h5 class="mb-1">{{ person.phone_number }}</h5></a>
+                  <small class="text-primary">{{call.call_time}}</small>
                 </div>
                 <p class="mb-1">{{call.comment}}</p>
               </div>
@@ -81,8 +71,8 @@
         <div class="list-group container mb-3">
           <div class="list-group-item">
             <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">Звонок ({{call.status}})</h5>
-              <small>{{call.call_time}}</small>
+              <a href="tel:{{ person.phone_number }}"><h5 class="mb-1">{{ person.phone_number }}</h5></a>
+              <small class="text-primary">{{call.call_time}}</small>
             </div>
             <p class="mb-1">{{call.comment}}</p>
           </div>

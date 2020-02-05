@@ -1,13 +1,12 @@
 from django import forms
 from .models import *
-from django.forms import inlineformset_factory
 
 
 class PersonForm(forms.ModelForm):
     class Meta:
         model = Job
         fields = ['fio', 'release_year', 'budget', 'code',
-                  'practice_one', 'practice_two', 'employment']
+                  'practice_one', 'practice_two', 'phone_number', 'email', 'employment']
         labels = {
             'fio': 'ФИО',
             'release_year': 'Дата рождения',
@@ -16,6 +15,8 @@ class PersonForm(forms.ModelForm):
             'practice_one': 'Место прохождения первой практики',
             'practice_two': 'Место прохождения второй практики',
             'budget': 'Бюджет / Платник',
+            'phone_number': 'Номер телефона',
+            'email': 'Электронная почта',
         }
         widgets = {
             'fio': forms.TextInput(attrs={'class': 'form-control'}),
@@ -26,6 +27,8 @@ class PersonForm(forms.ModelForm):
             'practice_one': forms.TextInput(attrs={'class': 'form-control'}),
             'practice_two': forms.TextInput(attrs={'class': 'form-control'}),
             'budget': forms.RadioSelect(),
+            'phone_number': forms.TextInput(attrs={'class': 'form-control', 'id': 'phone_number'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'id': 'email'}),
         }
 
 

@@ -21,6 +21,8 @@ class Job(models.Model):
     budget = models.CharField(max_length=100, choices=IS_BUDGET, default='Бюджет')
     vacancy_st = models.CharField(max_length=100)
     notifications = models.IntegerField(null=True, blank=True)
+    phone_number = models.CharField(max_length=15)
+    email = models.EmailField(max_length=254, help_text='foo@example.com')
 
     def __str__(self):
         return self.fio

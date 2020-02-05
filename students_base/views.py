@@ -64,6 +64,8 @@ class Index(View):
         if bound_form.is_valid():
             bound_form.save()
             return redirect('/students_base')
+        else:
+            print(bound_form.errors)
         context = {
             'form': bound_form
         }
