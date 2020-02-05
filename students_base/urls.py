@@ -10,5 +10,7 @@ urlpatterns = [
     path('add_org/', AddOrganization.as_view(), name='add_org'),
     path('add_vacancy_org/', AddVacancyOrganization.as_view(), name='add_vacancy_org'),
     path('add_document/', AddDocument.as_view(), name='add_document'),
+    path('student_detail/<int:pk>/', StudentDetail.as_view(), name='student_detail'),
+    path('calls_cancle/<int:pk>/', CancleCalls.as_view(), name='calls_cancle'),
 ]
 

@@ -113,7 +113,7 @@
                           </div>
                             {% else %}
                                 <p>Вакансия: {{person.vacancy_st}}</p>
-                                {% endif %}
+                            {% endif %}
                         </div>
                       </div>
                     </div>
@@ -160,12 +160,17 @@
                         </div>
                       </div>
               </td>
+                <td>
+                    {% if person.notifications > 0 %}
+                    <a href="{% url 'student_detail' pk=person.id %}" type="button" class="btn btn-danger">Звонки</a>
+                    {% else %}
+                    <a href="{% url 'student_detail' pk=person.id %}" type="button" class="btn btn-primary">Звонки</a>
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
-        <button type="button" class="btn btn-primary" onclick="tableToExcel('to_print', 'Таблица студентов', 'Таблица.xls')">Импорт в exel</button>
-
 
     <script>
         $(document).ready(function(){

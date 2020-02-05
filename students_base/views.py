@@ -1,4 +1,6 @@
-from django.core.exceptions import ObjectDoesNotExist
+import datetime
+
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .models import *
@@ -31,8 +33,17 @@ def check_vacancy():
 class Index(View):
     template = 'index.html'
 
+    def check_notifications(self, people):
+        for person, vacancy in people:
+            sch = 0
+            for calls in person.calls_set.all():
+                if calls.status == 'Истёк':
+                    sch += 1
+            person.notifications = sch
+
     def get(self, request):
         people = check_vacancy()
+        self.check_notifications(people)
         list_employments = List_of_employment.objects.order_by("employment")
         context = {
             'form': PersonForm(),
@@ -67,16 +78,6 @@ class VacPage(View):
         context = {
             'form_org': OrganizationForm(),
             'org_list': org
-        }
-        return render(request, self.template, context)
-
-    def post(self, request):
-        bound_form = VacancyForm(request.POST)
-        if bound_form.is_valid():
-            bound_form.save()
-            return redirect('/students_base/vacancy')
-        context = {
-            'form': bound_form
         }
         return render(request, self.template, context)
 
@@ -157,3 +158,47 @@ class AddDocument(View):
                 return redirect('/students_base/')
             else:
                 return redirect('/students_base/')
+
+
+class StudentDetail(View):
+    template = 'student_detail.html'
+
+    def check_calls(self, person):
+        for call in person.calls_set.all():
+            if call.status != 'Завершён' and call.call_time.date() <= datetime.datetime.now().date():
+                call.status = 'Истёк'
+                call.save()
+
+    def get(self, request, pk):
+        person = get_object_or_404(Job, id=pk)
+        self.check_calls(person)
+        context = {
+            'person': person,
+            'call_form': CallsForm(),
+        }
+        return render(request, self.template, context)
+
+    def post(self, request, pk):
+        person = get_object_or_404(Job, id=pk)
+        context = {
+            'person': person,
+            'call_form': CallsForm()
+        }
+        if request.method == 'POST':
+            time = request.POST.get("call_time").split("T")
+            call = Calls()
+            call.call_time = ("{} {}").format(time[0], time[1])
+            call.comment = request.POST.get("comment")
+            call.fio = person
+            call.status = 'В процессе'
+            call.save()
+        return redirect('/students_base/student_detail/' + str(person.id))
+
+
+class CancleCalls(View):
+    def post(self, request, pk):
+        if request.method == 'POST':
+            call = get_object_or_404(Calls, id=pk)
+            call.status = request.POST.get("status")
+            call.save()
+            return redirect('/students_base/student_detail/' + str(call.fio.id))

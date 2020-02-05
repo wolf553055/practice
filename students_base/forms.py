@@ -29,31 +29,6 @@ class PersonForm(forms.ModelForm):
         }
 
 
-class VacancyForm(forms.ModelForm):
-    class Meta:
-        model = Vacancy
-        fields = '__all__'
-        labels = {
-            'title': 'Название вакансии',
-        }
-        widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control'}),
-        }
-
-
-class VacancySkillsForm(forms.ModelForm):
-    class Meta:
-        model = Skills_Vacancy
-        fields = '__all__'
-        labels = {
-            'vacancy': 'Название вакансии',
-            'title': 'Что должен уметь'
-        }
-        widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control'})
-        }
-
-
 class OrganizationForm(forms.ModelForm):
     class Meta:
         model = Organization
@@ -71,3 +46,12 @@ class ImageForm(forms.Form):
         label='Добавить документ',
         help_text='max. 42 megabytes'
     )
+
+
+class CallsForm(forms.ModelForm):
+    class Meta:
+        model = Calls
+        fields = '__all__'
+        widgets = {
+            'call_time': forms.TextInput(attrs={'class': 'form-control', 'type': 'datetime-local'})
+        }

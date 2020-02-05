@@ -20,6 +20,7 @@ class Job(models.Model):
     practice_two = models.CharField(max_length=100)
     budget = models.CharField(max_length=100, choices=IS_BUDGET, default='Бюджет')
     vacancy_st = models.CharField(max_length=100)
+    notifications = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.fio
@@ -68,3 +69,11 @@ class Skills_Student(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Calls(models.Model):
+    fio = models.ForeignKey(Job, on_delete=models.CASCADE)
+    add_time = models.DateTimeField(auto_now_add=True)
+    call_time = models.DateTimeField()
+    comment = models.CharField(max_length=150, help_text='max 150 symbols')
+    status = models.CharField(max_length=15, null=True, blank=True)
