@@ -166,8 +166,8 @@ class StudentDetail(View):
     template = 'student_detail.html'
 
     def check_calls(self, person):
-        for call in person.calls_set.all():
-            if call.status != 'Завершён' and call.call_time.date() <= datetime.datetime.now().date():
+        for call in person.calls_set.order_by('-call_time').filter(call_time__lte=datetime.datetime.now()):
+            if call.status != 'Завершён':
                 call.status = 'Истёк'
                 call.save()
 
