@@ -1,13 +1,10 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
-    <title>{{person.fio}}</title>
-  </head>
-  <body>
+{% extends "base_generic.html" %}
+
+{% block title %}
+<title>{{ person.fio }}</title>
+{% endblock %}
+
+{% block content %}
 
   <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 bg-light">
     <div class="col-md-5 mx-auto">
@@ -65,24 +62,5 @@
             </div>
           {% endif %}
         {% endfor %}
-    <hr>
-    {% for call in person.calls_set.all %}
-      {% if call.status == 'Завершён' %}
-        <div class="list-group container mb-3">
-          <div class="list-group-item">
-            <div class="d-flex w-100 justify-content-between">
-              <a href="tel:{{ person.phone_number }}"><h5 class="mb-1">{{ person.phone_number }}</h5></a>
-              <small class="text-primary">{{call.call_time}}</small>
-            </div>
-            <p class="mb-1">{{call.comment}}</p>
-          </div>
-        </div>
-      {% endif %}
-    {% endfor %}
   {% endif %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.1.60/inputmask/jquery.inputmask.js"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-  </body>
-</html>
+{% endblock %}
