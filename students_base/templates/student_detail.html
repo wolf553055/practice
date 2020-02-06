@@ -35,8 +35,8 @@
         <div class="list-group container mb-3 mt-5">
           <div class="list-group-item active">
             <div class="d-flex w-100 justify-content-between">
-              <a href="tel:{{ person.phone_number }}"><h5 class="mb-1 text-light">{{ person.phone_number }}</h5></a>
-              <small class="text-light">{{call.call_time}}</small>
+              <h5 class="mb-1 text-light"><a href="tel:{{ person.phone_number }}" class="mb-1 text-light">{{ person.phone_number }}</a> ({{call.call_time.time}})</h5>
+              <small class="text-light">{{call.call_time.date}}</small>
             </div>
             <p class="mb-1">{{call.comment}}</p>
             <form action="{% url 'calls_cancle' pk=call.id %}" method="post">
