@@ -44,7 +44,7 @@ class Index(View):
     def get(self, request):
         people = check_vacancy()
         self.check_notifications(people)
-        list_employments = List_of_employment.objects.order_by("employment")
+        list_employments = ListOfEmployment.objects.order_by("employment")
         context = {
             'form': PersonForm(),
             'list_employments': list_employments,
@@ -56,9 +56,9 @@ class Index(View):
     def post(self, request):
         bound_form = PersonForm(request.POST)
         is_employment = request.POST.get("employment")
-        el = List_of_employment.objects.filter(employment=is_employment)
+        el = ListOfEmployment.objects.filter(employment=is_employment)
         if not el:
-            em = List_of_employment()
+            em = ListOfEmployment()
             em.employment = is_employment
             em.save()
         if bound_form.is_valid():
@@ -87,7 +87,7 @@ class VacPage(View):
 class VacSkPage(View):
     def post(self, request):
         if request.method == 'POST':
-            sk_vac = Skills_Vacancy()
+            sk_vac = SkillsVacancy()
             sk_vac.title = request.POST.get("title")
             vac_id = request.POST.get("vacancy")
             vac = Vacancy.objects.get(id=vac_id)
@@ -101,7 +101,7 @@ class StSkPage(View):
         id_st = request.POST.get("id")
         student = Job.objects.get(id=id_st)
         if request.method == 'POST':
-            st_skills = Skills_Student()
+            st_skills = SkillsStudent()
             st_skills.fio = student
             st_skills.title = request.POST.get("title")
             st_skills.save()

@@ -34,7 +34,7 @@ class DocumentImg(models.Model):
     worker = models.ForeignKey(Job, on_delete=models.CASCADE, null=True, blank=True)
 
 
-class List_of_employment(models.Model):
+class ListOfEmployment(models.Model):
     employment = models.CharField(max_length=100)
 
     def __str__(self):
@@ -57,7 +57,7 @@ class Vacancy(models.Model):
         return self.title
 
 
-class Skills_Vacancy(models.Model):
+class SkillsVacancy(models.Model):
     vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
 
@@ -65,7 +65,7 @@ class Skills_Vacancy(models.Model):
         return self.title
 
 
-class Skills_Student(models.Model):
+class SkillsStudent(models.Model):
     fio = models.ForeignKey(Job, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
 
