@@ -1,7 +1,7 @@
 import datetime
 
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
 from .models import *
 from django.views.generic import View
@@ -204,3 +204,34 @@ class CancleCalls(View):
             call.status = request.POST.get("status")
             call.save()
             return redirect('/students_base/student_detail/' + str(call.fio.id))
+
+
+class Education(View):
+    template = 'education.html'
+
+    def get(self, request):
+        colleges = College.objects.all()
+        context = {
+            'form': CollegeForm(),
+            'colleges': colleges,
+        }
+        return render(request, self.template, context)
+
+    def post(self, request):
+        bound_form = CollegeForm(request.POST)
+        if bound_form.is_valid():
+            bound_form.save()
+            return redirect('/students_base/education')
+        return redirect('/students_base/education')
+
+
+class Spec(View):
+    def post(self, request):
+        if request.method == 'POST':
+            college = College.objects.get(id=request.POST.get("college"))
+            spec = Specialty()
+            spec.title = request.POST.get("title")
+            spec.college = college
+            spec.save()
+            return redirect('/students_base/education')
+        return redirect('/students_base/education')

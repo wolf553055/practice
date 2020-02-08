@@ -11,11 +11,26 @@ IS_FREE = (
 )
 
 
+class College(models.Model):
+    title = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.title
+
+
+class Specialty(models.Model):
+    title = models.CharField(max_length=100)
+    college = models.ForeignKey(College, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{} ({})'.format(self.title, self.college.title)
+
+
 class Job(models.Model):
     fio = models.CharField(max_length=100)
     release_year = models.CharField(max_length=10)
     employment = models.CharField(max_length=100)
-    code = models.CharField(max_length=100)
+    specialty = models.ForeignKey(Specialty, on_delete=models.CASCADE, null=True, blank=True)
     practice_one = models.CharField(max_length=100)
     practice_two = models.CharField(max_length=100)
     budget = models.CharField(max_length=100, choices=IS_BUDGET, default='Бюджет')

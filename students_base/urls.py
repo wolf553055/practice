@@ -12,5 +12,7 @@ urlpatterns = [
     path('add_document/', AddDocument.as_view(), name='add_document'),
     path('student_detail/<int:pk>/', StudentDetail.as_view(), name='student_detail'),
     path('calls_cancle/<int:pk>/', CancleCalls.as_view(), name='calls_cancle'),
+    path('education/', Education.as_view(), name='education'),
+    path('specialty/', Spec.as_view(), name='specialty'),
 ]
 
