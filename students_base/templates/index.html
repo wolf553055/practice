@@ -157,7 +157,7 @@
                       </div>
               </td>
                 <td>
-                    {% if person.notifications > 0 %}
+                    {% if person.calls_expired_status.count > 0 %}
                     <a href="{% url 'student_detail' pk=person.id %}" type="button" class="btn btn-danger">Звонки</a>
                     {% else %}
                     <a href="{% url 'student_detail' pk=person.id %}" type="button" class="btn btn-primary">Звонки</a>

@@ -33,17 +33,8 @@ def check_vacancy():
 class Index(View):
     template = 'index.html'
 
-    def check_notifications(self, people):
-        for person, vacancy in people:
-            sch = 0
-            for calls in person.calls_set.all():
-                if calls.status == 'Истёк':
-                    sch += 1
-            person.notifications = sch
-
     def get(self, request):
         people = check_vacancy()
-        self.check_notifications(people)
         list_employments = List_of_employment.objects.order_by("employment")
         context = {
             'form': PersonForm(),
