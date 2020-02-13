@@ -30,8 +30,7 @@
       </form>
   </div>
   {% if person.calls_set.count > 0 %}
-    {% for call in person.calls_set.all %}
-      {% if call.status == 'Истёк' %}
+    {% for call in person.calls_expired_status %}
         <div class="list-group container mb-3 mt-5">
           <div class="list-group-item active">
             <div class="d-flex w-100 justify-content-between">
@@ -46,11 +45,9 @@
             </form>
           </div>
         </div>
-      {% endif %}
     {% endfor %}
     <hr>
-      {% for call in person.calls_set.all %}
-          {% if call.status == 'В процессе' %}
+      {% for call in person.calls_not_expired_status %}
             <div class="list-group container mb-3" style="word-wrap: break-word;">
               <div class="list-group-item">
                 <div class="d-flex w-100 justify-content-between">
@@ -60,7 +57,6 @@
                 <p class="mb-1">{{call.comment}}</p>
               </div>
             </div>
-          {% endif %}
         {% endfor %}
   {% endif %}
 {% endblock %}

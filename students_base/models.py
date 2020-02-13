@@ -39,6 +39,12 @@ class Job(models.Model):
     phone_number = models.CharField(max_length=15)
     email = models.EmailField(max_length=254, help_text='foo@example.com')
 
+    def calls_expired_status(self):
+        return self.calls_set.filter(status='Истёк')
+
+    def calls_not_expired_status(self):
+        return self.calls_set.filter(status='В процессе')
+
     def __str__(self):
         return self.fio
 
