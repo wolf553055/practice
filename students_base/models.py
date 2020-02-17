@@ -10,6 +10,11 @@ IS_FREE = (
     ('Занята', 'Занята')
 )
 
+ON_SPECIALTY = (
+    ('По специальности', 'По специальности'),
+    ('Не по специальности','Не по специальности'),
+)
+
 
 class College(models.Model):
     title = models.CharField(max_length=100)
@@ -34,9 +39,10 @@ class Job(models.Model):
     practice_one = models.CharField(max_length=100)
     practice_two = models.CharField(max_length=100)
     budget = models.CharField(max_length=100, choices=IS_BUDGET, default='Бюджет')
-    vacancy_st = models.CharField(max_length=100)
+    vacancy_st = models.CharField(max_length=100, null=True, blank=True)
     phone_number = models.CharField(max_length=15)
     email = models.EmailField(max_length=254, help_text='foo@example.com')
+    on_speciality = models.CharField(max_length=100, choices=ON_SPECIALTY, null=True, blank=True)
 
     def calls_expired_status(self):
         return self.calls_set.filter(status='Истёк')

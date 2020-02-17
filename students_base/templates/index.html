@@ -24,11 +24,12 @@
         </select>
         <input type="submit" value="Добавить" class="btn btn-primary mt-2">
     </form>
+</div>
 
         <div class="container mt-5">
         <input class="form-control" id="myInput" type="text" placeholder="Search..">
         </div>
-        <table class="container table mt-5" id="to_print">
+        <table class="table mt-5" id="to_print">
           <thead>
             <tr>
               <th scope="col">ФИО</th>
@@ -38,10 +39,11 @@
               <th scope="col">Место прохождения первой практики</th>
               <th scope="col">Место прохождения второй практики</th>
               <th scope="col">Занятость</th>
+              <th scope="col">Вакансия</th>
             </tr>
           </thead>
           <tbody id="myTable">
-            {% for person, vacancy in people %}
+            {% for person in people %}
             <tr>
               <td>{{ person.fio }}</td>
               <td>{{ person.release_year }}</td>
@@ -50,70 +52,11 @@
               <td>{{ person.practice_one }}</td>
               <td>{{ person.practice_two }}</td>
               <td>{{ person.employment }}</td>
-                <td>
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".l{{person.id}}">
-                      Подробнее
-                  </button>
-                    <div class="modal fade l{{person.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                      <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">{{ person.fio }}</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-
-                            <div class="modal-body" id="to_print_{{person.id}}">
-                                {% if not person.vacancy_st %}
-                                <h2>Умения:</h2>
-                                {% if person.skills_student_set.all %}
-                                    {% for skill in person.skills_student_set.all %}
-                                        <p>{{skill}}</p>
-                                    {% endfor %}
-                                {% else %}
-                                <p>Умений пока нету :)</p>
-                                {% endif %}
-                                <h2>Добавить умение</h2>
-                                <form action="{% url 'student_skills' %}" method="post">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="id" value="{{person.id}}"/>
-                                    <input type="text" name="title" class="form-control"/>
-                                </form>
-
-                                {% if vacancy %}
-                                <h2>Вакансии:</h2>
-                                        {% for vac in vacancy %}
-                                            <h3 class="text-success">{{vac.title}}</h3>
-                                            <p>Умения для вакансии {{vac.title.lower}}:</p>
-                                            {% for skill in vac.skills_vacancy_set.all %}
-                                                <p>{{skill}}</p>
-                                            {% endfor %}
-                                        {% endfor %}
-                                            <h3>Выбор вакансии</h3>
-                                            <form action="{% url 'add_vacancy' %}" method="post">
-                                                {% csrf_token %}
-                                                <input type="hidden" name="id_st" value="{{person.id}}"/>
-                                                <select name="vacancy" id="vacancy" class="form-control w-50">
-                                                  <option value="Другое">Выбор вакансии</option>
-                                                    {% for vac in vacancy %}
-                                                  <option value="{{vac.id}}">{{vac}}</option>
-                                                    {% endfor %}
-                                                </select>
-                                                <input type="submit" value="Добавить" class="btn btn-primary mt-2">
-                                            </form>
-                                {% endif %}
-                            </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                          </div>
-                            {% else %}
-                                <p>Вакансия: {{person.vacancy_st}}</p>
-                            {% endif %}
-                        </div>
-                      </div>
-                    </div>
-              </td>
+              {% if not person.vacancy_st == NULL %}
+              <td class="{% if person.on_speciality == 'По специальности' or person.vacancy %}text-primary{% endif %}">{% if not person.vacancy %} {{ person.vacancy_st }} {% else %} {{ person.vacancy }} {% endif %}</td>
+              {% else %}
+              <td class = "text-warning">Безработный</td>
+              {% endif %}
               <td>
                   <button type="button" class="btn {% if person.documentimg_set.all.count > 0 %}btn-success{% else %}btn-primary{% endif %}" data-toggle="modal" data-target="#Modal{{ person.id }}">
                       Документы
@@ -155,12 +98,13 @@
                           </div>
                         </div>
                       </div>
+                    </div>
               </td>
                 <td>
                     {% if person.calls_expired_status.count > 0 %}
-                    <a href="{% url 'student_detail' pk=person.id %}" type="button" class="btn btn-danger">Звонки</a>
+                    <a href="{% url 'student_detail' pk=person.id %}" type="button" class="btn btn-danger">Подробнее</a>
                     {% else %}
-                    <a href="{% url 'student_detail' pk=person.id %}" type="button" class="btn btn-primary">Звонки</a>
+                    <a href="{% url 'student_detail' pk=person.id %}" type="button" class="btn btn-primary">Подробнее</a>
                     {% endif %}
                 </td>
             </tr>

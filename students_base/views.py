@@ -8,33 +8,11 @@ from django.views.generic import View
 from .forms import *
 
 
-def check_vacancy():
-    people_vac = []
-    vacancy_p = []
-    sch = 0
-    vacancy = Vacancy.objects.order_by("title")
-    people = Job.objects.order_by("fio")
-    for person in people:
-        for vac in vacancy:
-            if not vac.worker:
-                for key in person.skills_student_set.all():
-                    for key_v in vac.skills_vacancy_set.all():
-                        if str(key) == str(key_v):
-                            sch += 1
-                if sch != 0:
-                    vacancy_p.append(vac)
-                    sch = 0
-        if vacancy:
-            people_vac.append([person, vacancy_p])
-        vacancy_p = []
-    return people_vac
-
-
 class Index(View):
     template = 'index.html'
 
     def get(self, request):
-        people = check_vacancy()
+        people = Job.objects.order_by("fio")
         list_employments = List_of_employment.objects.order_by("employment")
         context = {
             'form': PersonForm(),
@@ -96,8 +74,8 @@ class StSkPage(View):
             st_skills.fio = student
             st_skills.title = request.POST.get("title")
             st_skills.save()
-            return redirect('/students_base/')
-        return redirect('/students_base/')
+            return redirect('/students_base/student_detail/' + str(student.id))
+        return redirect('/students_base/student_detail/' + str(student.id))
 
 
 class AddVacancy(View):
@@ -112,7 +90,7 @@ class AddVacancy(View):
                 student.save()
                 vac.worker = student
                 vac.save()
-                return redirect('/students_base/')
+                return redirect('/students_base/student_detail/' + str(student.id))
         except ValueError:
             return redirect('/students_base/')
 
@@ -162,12 +140,28 @@ class StudentDetail(View):
                 call.status = 'Истёк'
                 call.save()
 
+    def check_vacancy(self, person):
+        vacancy_p = []
+        sch = 0
+        vacancy = Vacancy.objects.order_by("title")
+        people = Job.objects.order_by("fio")
+        for vac in vacancy:
+            if not vac.worker:
+                for key in person.skills_student_set.all():
+                    for key_v in vac.skills_vacancy_set.all():
+                        if str(key) == str(key_v):
+                            sch += 1
+                if sch != 0:
+                    vacancy_p.append(vac)
+        return vacancy_p
+
     def get(self, request, pk):
         person = get_object_or_404(Job, id=pk)
         self.check_calls(person)
         context = {
             'person': person,
             'call_form': CallsForm(),
+            'vacancy': self.check_vacancy(person)
         }
         return render(request, self.template, context)
 

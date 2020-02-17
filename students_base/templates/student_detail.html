@@ -17,6 +17,58 @@
       <p class="lead font-weight-normal"><p class="lead font-weight-bold">Занятость:</p> {{ person.employment }}</p>
       <a class="lead font-weight-normal"><p class="lead font-weight-bold">Email:</p> <a href="mailto:{{ person.email }}" class="text-reset">{{ person.email }}</a></a>
       <p class="lead font-weight-normal"><p class="lead font-weight-bold">Номер телефона:</p> <a href="tel:{{ person.phone_number }}" class="text-reset">{{ person.phone_number }}</a></p>
+      <p class="lead font-weight-normal"><p class="lead font-weight-bold">Образование:</p> {{ person.specialty }}</p>
+    </div>
+  </div>
+  <hr>
+  <div class="container">
+    <h1 class="text-center">Текущая вакансия / добавить вакансию:</h1>
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-body" id="to_print_{{person.id}}">
+              {% if not person.vacancy_st %}
+              <h2>Умения:</h2>
+              {% if person.skills_student_set.all %}
+                  {% for skill in person.skills_student_set.all %}
+                      <p>{{skill}}</p>
+                  {% endfor %}
+              {% else %}
+              <p>Умений пока нету :)</p>
+              {% endif %}
+              <h2>Добавить умение</h2>
+              <form action="{% url 'student_skills' %}" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="id" value="{{person.id}}"/>
+                  <input type="text" name="title" class="form-control"/>
+              </form>
+
+              {% if vacancy %}
+              <h2>Вакансии:</h2>
+                      {% for vac in vacancy %}
+                          <h3 class="text-success">{{vac.title}}</h3>
+                          <p>Умения для вакансии {{vac.title.lower}}:</p>
+                          {% for skill in vac.skills_vacancy_set.all %}
+                              <p>{{skill}}</p>
+                          {% endfor %}
+                      {% endfor %}
+                          <h3>Выбор вакансии</h3>
+                          <form action="{% url 'add_vacancy' %}" method="post">
+                              {% csrf_token %}
+                              <input type="hidden" name="id_st" value="{{person.id}}"/>
+                              <select name="vacancy" id="vacancy" class="form-control w-50">
+                                <option value="Другое">Выбор вакансии</option>
+                                  {% for vac in vacancy %}
+                                <option value="{{vac.id}}">{{vac}}</option>
+                                  {% endfor %}
+                              </select>
+                              <input type="submit" value="Добавить" class="btn btn-primary mt-2">
+                          </form>
+              {% endif %}
+          </div>
+          {% else %}
+              <p>Вакансия: {{person.vacancy_st}}</p>
+          {% endif %}
+      </div>
     </div>
   </div>
   <hr>
