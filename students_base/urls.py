@@ -14,5 +14,6 @@ urlpatterns = [
     path('calls_cancle/<int:pk>/', CancleCalls.as_view(), name='calls_cancle'),
     path('education/', Education.as_view(), name='education'),
     path('specialty/', Spec.as_view(), name='specialty'),
+    path('export/xls/', export_students_xls, name='export_students_xls')
 ]
 

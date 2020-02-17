@@ -1,11 +1,21 @@
 import datetime
+import xlwt
 
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
+from xlwt.compat import xrange
+
 from .models import *
 from django.views.generic import View
 from .forms import *
+
+
+def check_calls(person):
+    for call in person.calls_set.order_by('-call_time').filter(call_time__lte=datetime.datetime.now()):
+        if call.status != 'Завершён':
+            call.status = 'Истёк'
+            call.save()
 
 
 class Index(View):
@@ -13,6 +23,8 @@ class Index(View):
 
     def get(self, request):
         people = Job.objects.order_by("fio")
+        for person in people:
+            check_calls(person)
         list_employments = List_of_employment.objects.order_by("employment")
         context = {
             'form': PersonForm(),
@@ -75,7 +87,7 @@ class StSkPage(View):
             st_skills.title = request.POST.get("title")
             st_skills.save()
             return redirect('/students_base/student_detail/' + str(student.id))
-        return redirect('/students_base/student_detail/' + str(student.id))
+        return HttpResponse(status=404)
 
 
 class AddVacancy(View):
@@ -87,12 +99,13 @@ class AddVacancy(View):
             vac = Vacancy.objects.get(id=vacancy)
             if request.method == 'POST':
                 student.vacancy_st = vac.title
+                student.on_speciality = 'По специальности'
                 student.save()
                 vac.worker = student
                 vac.save()
                 return redirect('/students_base/student_detail/' + str(student.id))
         except ValueError:
-            return redirect('/students_base/')
+            return HttpResponse(status=404)
 
 
 class AddOrganization(View):
@@ -101,7 +114,7 @@ class AddOrganization(View):
         if bound_form.is_valid():
             bound_form.save()
             return redirect('/students_base/vacancy')
-        return redirect('/students_base/vacancy')
+        return HttpResponse(status=404)
 
 
 class AddVacancyOrganization(View):
@@ -114,7 +127,7 @@ class AddVacancyOrganization(View):
             vacancy.organization = organization
             vacancy.save()
             return redirect('/students_base/vacancy')
-        return redirect('/students_base/vacancy')
+        return HttpResponse(status=404)
 
 
 class AddDocument(View):
@@ -128,17 +141,11 @@ class AddDocument(View):
                 newimg.save()
                 return redirect('/students_base/')
             else:
-                return redirect('/students_base/')
+                return HttpResponse(status=404)
 
 
 class StudentDetail(View):
     template = 'student_detail.html'
-
-    def check_calls(self, person):
-        for call in person.calls_set.order_by('-call_time').filter(call_time__lte=datetime.datetime.now()):
-            if call.status != 'Завершён':
-                call.status = 'Истёк'
-                call.save()
 
     def check_vacancy(self, person):
         vacancy_p = []
@@ -157,7 +164,7 @@ class StudentDetail(View):
 
     def get(self, request, pk):
         person = get_object_or_404(Job, id=pk)
-        self.check_calls(person)
+        check_calls(person)
         context = {
             'person': person,
             'call_form': CallsForm(),
@@ -207,7 +214,7 @@ class Education(View):
         if bound_form.is_valid():
             bound_form.save()
             return redirect('/students_base/education')
-        return redirect('/students_base/education')
+        return HttpResponse(status=404)
 
 
 class Spec(View):
@@ -219,4 +226,36 @@ class Spec(View):
             spec.college = college
             spec.save()
             return redirect('/students_base/education')
-        return redirect('/students_base/education')
+        return HttpResponse(status=404)
+
+
+def export_students_xls(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="students.xls"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Студенты')
+
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['ФИО', 'e-mail', 'телефон', 'форма финансирования',
+               'трудоустроенность', 'вид специальности']
+
+    for col_num in xrange(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style)
+
+    # Sheet body, remaining rows
+    font_style = xlwt.XFStyle()
+
+    rows = Job.objects.all().values_list('fio', 'email', 'phone_number',
+                                         'budget', 'vacancy_st', 'on_speciality')
+    for row in rows:
+        row_num += 1
+        for col_num in xrange(len(row)):
+            ws.write(row_num, col_num, row[col_num], font_style)
+
+    wb.save(response)
+    return response
