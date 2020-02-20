@@ -17,7 +17,7 @@ class PersonForm(forms.ModelForm):
             'budget': '*Бюджет / Платник',
             'phone_number': '*Номер телефона',
             'email': '*Электронная почта',
-            'specialty': 'Специальность',
+            'specialty': '*Специальность',
             'vacancy_st': 'Вакансия',
             'on_speciality': 'Трудоустроенность'
         }
@@ -74,4 +74,18 @@ class CollegeForm(forms.ModelForm):
         }
         labels = {
             'title': 'Название университета/спо'
+        }
+
+
+class GroupForm(forms.ModelForm):
+    class Meta:
+        model = Group
+        fields = '__all__'
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'specialty': forms.Select(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'title': 'Название группы',
+            'specialty': 'Название специальности'
         }

@@ -31,11 +31,19 @@ class Specialty(models.Model):
         return '{} ({})'.format(self.title, self.college.title)
 
 
+class Group(models.Model):
+    title = models.CharField(max_length=100)
+    specialty = models.ForeignKey(Specialty, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{} ({} - {})'.format(self.title, self.specialty.title, self.specialty.college.title)
+
+
 class Job(models.Model):
     fio = models.CharField(max_length=100)
     release_year = models.CharField(max_length=10)
     employment = models.CharField(max_length=100)
-    specialty = models.ForeignKey(Specialty, on_delete=models.CASCADE, null=True, blank=True)
+    specialty = models.ForeignKey(Group, on_delete=models.CASCADE)
     practice_one = models.CharField(max_length=100)
     practice_two = models.CharField(max_length=100)
     budget = models.CharField(max_length=100, choices=IS_BUDGET, default='Бюджет')

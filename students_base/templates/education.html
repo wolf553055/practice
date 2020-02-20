@@ -18,6 +18,21 @@
         {% endfor %}
         <input type="submit" value="Добавить" class="btn btn-primary mt-2">
     </form>
+<hr>
+    <form action="{% url 'add_group' %}" method="POST" class="container mt-5">
+        {% csrf_token %}
+        <h3>Добавить группу</h3>
+        {% for field in g_form %}
+            <div class="form-group row">
+                <div class="col-sm-10">
+                        {{ field.label }}
+                        {{ field }}
+                </div>
+            </div>
+        {% endfor %}
+        <input type="submit" value="Добавить" class="btn btn-primary mt-2">
+    </form>
+<hr>
 
     {% for college in colleges %}
       <div class="my-3 p-3 bg-white rounded box-shadow container">
@@ -26,12 +41,16 @@
             <div class="media text-muted pt-3">
               <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
                 <strong class="d-block text-gray-dark">{{ spec.title }}</strong>
-                  {% for student in spec.job_set.all %}
-                    {{ student.fio }}<br>
+                  {% for group in spec.group_set.all %}
+                      <strong class="d-block text-gray-dark">{{ group.title }}</strong>
+                      {% for student in group.job_set.all %}
+                        {{ student.fio }}<br>
+                      {% endfor %}
                   {% endfor %}
               </p>
             </div>
           {% endfor %}
+
         <small class="d-block mt-3">
             <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse{{college.id}}" aria-expanded="false">
                 Добавить специальность

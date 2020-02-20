@@ -206,6 +206,7 @@ class Education(View):
         context = {
             'form': CollegeForm(),
             'colleges': colleges,
+            'g_form': GroupForm(),
         }
         return render(request, self.template, context)
 
@@ -242,7 +243,7 @@ def export_students_xls(request):
     font_style.font.bold = True
 
     columns = ['ФИО', 'e-mail', 'телефон', 'форма финансирования',
-               'трудоустроенность', 'вид специальности']
+               'трудоустроенность', 'вид занятости']
 
     for col_num in xrange(len(columns)):
         ws.write(row_num, col_num, columns[col_num], font_style)
@@ -259,3 +260,12 @@ def export_students_xls(request):
 
     wb.save(response)
     return response
+
+
+class AddGroup(View):
+    def post(self, request):
+        bound_form = GroupForm(request.POST)
+        if bound_form.is_valid():
+            bound_form.save()
+            return redirect('/students_base/education')
+        return HttpResponse(status=404)
