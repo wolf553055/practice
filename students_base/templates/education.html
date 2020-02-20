@@ -44,7 +44,7 @@
                   {% for group in spec.group_set.all %}
                       <strong class="d-block text-gray-dark">{{ group.title }}</strong>
                       {% for student in group.job_set.all %}
-                        {{ student.fio }}<br>
+                        <a href="{% url 'student_detail' pk=student.id %}"> {{ student.fio }} </a> <br>
                       {% endfor %}
                   {% endfor %}
               </p>
