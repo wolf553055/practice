@@ -51,6 +51,7 @@ class Job(models.Model):
     phone_number = models.CharField(max_length=15)
     email = models.EmailField(max_length=254, help_text='foo@example.com')
     on_speciality = models.CharField(max_length=100, choices=ON_SPECIALTY, null=True, blank=True)
+    expiry_date = models.DateField(null=True, blank=True)
 
     def calls_expired_status(self):
         return self.calls_set.filter(status='Истёк')

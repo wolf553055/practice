@@ -51,7 +51,7 @@
               <td>{{ person.budget }}</td>
               <td>{{ person.practice_one }}</td>
               <td>{{ person.practice_two }}</td>
-              <td>{{ person.employment }}</td>
+              <td>{% if person.employment == 'Декрет' or person.employment == 'Уход в армию'%}{{ person.employment }} (до {{ person.expiry_date }}){% else %}{{ person.employment }}{% endif %}</td>
               {% if not person.vacancy_st == NULL %}
               <td class="{% if person.on_speciality == 'По специальности' or person.vacancy %}text-primary{% endif %}">{% if not person.vacancy %} {{ person.vacancy_st }} {% else %} {{ person.vacancy }} {% endif %}</td>
               {% else %}
