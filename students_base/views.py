@@ -1,5 +1,6 @@
 import datetime
 import xlwt
+import xlrd
 
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, Http404
@@ -23,9 +24,12 @@ class Index(View):
 
     def get(self, request):
         people = Job.objects.order_by("fio")
+        list_employments = List_of_employment.objects.order_by("employment")
         for person in people:
             check_calls(person)
-        list_employments = List_of_employment.objects.order_by("employment")
+            employment = List_of_employment.objects.get(employment=person.employment)
+            person.color = employment.color
+            person.save()
         context = {
             'form': PersonForm(),
             'list_employments': list_employments,
@@ -262,6 +266,37 @@ def export_students_xls(request):
     return response
 
 
+def import_students_excel(request):
+    if request.method == 'POST':
+        filename = request.FILES['filename']
+        file_import = xlrd.open_workbook(file_contents=filename.read())
+        sheet = file_import.sheet_by_index(0)
+        for rownum in range(sheet.nrows):
+            student = Job()
+            student.fio = sheet.row_values(rownum)[0]
+            student.release_year = datetime.datetime(*xlrd.xldate_as_tuple(sheet.row_values(rownum)[1], file_import.datemode)).strftime('%d.%m.%Y')
+            student.budget = sheet.row_values(rownum)[2]
+            student.practice_one = sheet.row_values(rownum)[3]
+            student.practice_two = sheet.row_values(rownum)[4]
+            student.phone_number = sheet.row_values(rownum)[5]
+            student.email = sheet.row_values(rownum)[6]
+            student.employment = sheet.row_values(rownum)[7].split("|")[0]
+            if len(sheet.row_values(rownum)[7].split("|")) > 1:
+                date = sheet.row_values(rownum)[7].split("|")[1]
+                student.expiry_date = datetime.datetime.strptime(date, "%d.%m.%Y")
+            coll = College.objects.get(title=sheet.row_values(rownum)[10])
+            print(sheet.row_values(rownum)[9])
+            spec = coll.specialty_set.get(title=sheet.row_values(rownum)[9])
+            gr = spec.group_set.get(title=sheet.row_values(rownum)[8])
+            student.specialty = gr
+            if len(sheet.row_values(rownum)) == 13:
+                if sheet.row_values(rownum)[11]:
+                    student.vacancy_st = sheet.row_values(rownum)[11]
+                    student.on_speciality = sheet.row_values(rownum)[12]
+            student.save()
+        return redirect('/students_base/')
+
+
 class AddGroup(View):
     def post(self, request):
         bound_form = GroupForm(request.POST)
@@ -269,3 +304,25 @@ class AddGroup(View):
             bound_form.save()
             return redirect('/students_base/education')
         return HttpResponse(status=404)
+
+
+class Settings(View):
+    template = 'settings.html'
+
+    def get(self, request):
+        employments = List_of_employment.objects.all()
+        context = {
+            'employments': employments,
+        }
+        return render(request, self.template, context)
+
+    def post(self, request):
+        if request.method == 'POST':
+            employment = get_object_or_404(List_of_employment, id=request.POST.get("employment"))
+            employment.color = request.POST.get("color")
+            employment.save()
+            people = Job.objects.filter(employment=employment)
+            for person in people:
+                person.color = employment.color
+                person.save()
+            return redirect('/students_base/settings/')

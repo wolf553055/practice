@@ -1,0 +1,32 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+<title>Настройки</title>
+{% endblock %}
+
+{% block content %}
+
+<h3 class="text-center mt-5">Настройка цвета полей:</h3>
+<form action="{% url 'settings' %}" method="post" class="container w-25 mt-5 shadow-sm p-3 mb-5 bg-white rounded">
+    {% csrf_token %}
+    <select name="employment" class="form-control">
+        {% for employment in employments %}
+        <option value="{{ employment.id }}">{{ employment }}</option>
+        {% endfor %}
+    </select>
+    <input type="color" name="color" class="form-control mt-1">
+    <input type="submit" value="Добавить" class="btn btn-primary mt-2">
+</form>
+
+<div class="card text-center mt-5 w-75 container">
+  <div class="card-header">
+    Список занятостей
+  </div>
+  <div class="card-body">
+      {% for employment in employments %}
+        <p class="card-text" style="background-color: {{ employment.color }};">{{ employment }}</p>
+      {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

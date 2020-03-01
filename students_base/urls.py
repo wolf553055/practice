@@ -15,6 +15,8 @@ urlpatterns = [
     path('education/', Education.as_view(), name='education'),
     path('specialty/', Spec.as_view(), name='specialty'),
     path('export/xls/', export_students_xls, name='export_students_xls'),
-    path('education/add_group', AddGroup.as_view(), name='add_group')
+    path('education/add_group', AddGroup.as_view(), name='add_group'),
+    path('import/xls/', import_students_excel, name='import_students_excel'),
+    path('settings/', Settings.as_view(), name='settings')
 ]
 
