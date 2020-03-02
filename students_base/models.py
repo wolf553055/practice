@@ -66,8 +66,9 @@ class Job(models.Model):
 
 class DocumentImg(models.Model):
     title = models.CharField(max_length=100)
-    document = models.ImageField(upload_to='documents/%Y/%m/%d')
+    document = models.FileField(upload_to='documents/%Y/%m/%d')
     worker = models.ForeignKey(Job, on_delete=models.CASCADE, null=True, blank=True)
+    type = models.CharField(max_length=100)
 
 
 class List_of_employment(models.Model):

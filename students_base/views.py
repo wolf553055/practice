@@ -136,12 +136,15 @@ class AddVacancyOrganization(View):
 
 class AddDocument(View):
     def post(self, request):
+        expansions = ['jpg', 'jpeg', 'png']
         if request.method == 'POST':
             form = ImageForm(request.POST, request.FILES)
             if form.is_valid():
                 worker = Job.objects.get(id=request.POST['worker'])
                 newimg = DocumentImg(document=request.FILES['docfile'], worker=worker,
                                      title=request.POST['title'])
+                expansion = str(request.FILES['docfile']).split(".")[1]
+                newimg.type = 'Картинка' if expansion in expansions else 'Документ'
                 newimg.save()
                 return redirect('/students_base/')
             else:

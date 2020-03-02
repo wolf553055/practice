@@ -74,9 +74,14 @@
                           <div class="modal-body">
                               {% if person.documentimg_set.all %}
                                 {% for img in person.documentimg_set.all %}
-                                    <h3>{{img.title}}:</h3>
-                                    <img src="{{ MEDIA_URL }}{{ img.document }}" alt="h" class="img-thumbnail">
-                                    <hr>
+                                    {% if img.type == 'Картинка' %}
+                                        <h3>{{img.title}}:</h3>
+                                        <img src="{{ MEDIA_URL }}{{ img.document }}" alt="{{img.title}}" class="img-thumbnail">
+                                        <hr>
+                                    {% else %}
+                                        <a href="{{ MEDIA_URL }}{{ img.document }}">{{img.title}}</a>
+                                        <hr>
+                                    {% endif %}
                                 {% endfor %}
                               {% else %}
                                 <p>Документов пока нету :)</p>
