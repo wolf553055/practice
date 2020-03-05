@@ -1,3 +1,4 @@
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import path
 from .views import *
 
@@ -17,6 +18,8 @@ urlpatterns = [
     path('export/xls/', export_students_xls, name='export_students_xls'),
     path('education/add_group', AddGroup.as_view(), name='add_group'),
     path('import/xls/', import_students_excel, name='import_students_excel'),
-    path('settings/', Settings.as_view(), name='settings')
+    path('settings/', Settings.as_view(), name='settings'),
+    path('documentation/', Documentation.as_view(), name='documentation')
 ]
 
+urlpatterns += staticfiles_urlpatterns()
