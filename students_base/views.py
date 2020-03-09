@@ -313,7 +313,8 @@ def import_students_excel(request):
         for rownum in range(sheet.nrows):
             student = Job()
             student.fio = sheet.row_values(rownum)[0]
-            student.release_year = datetime.datetime(*xlrd.xldate_as_tuple(sheet.row_values(rownum)[1], file_import.datemode)).strftime('%d.%m.%Y')
+            student.release_year = datetime.datetime(
+                *xlrd.xldate_as_tuple(sheet.row_values(rownum)[1], file_import.datemode)).strftime('%d.%m.%Y')
             student.budget = sheet.row_values(rownum)[2]
             student.practice_one = sheet.row_values(rownum)[3]
             student.practice_two = sheet.row_values(rownum)[4]
@@ -365,3 +366,13 @@ class Settings(View):
                 person.color = employment.color
                 person.save()
             return redirect('/students_base/settings/')
+
+
+class Documentation(View):
+    template = "documentation.html"
+
+    def get(self, request):
+        context = {
+            'title': 'Документация',
+        }
+        return render(request, self.template, context)
