@@ -9,19 +9,185 @@
 
 <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
   <div class="col-md-5 p-lg-5 mx-auto my-5">
-    <h1 class="display-4 font-weight-normal">Добавление студентов в базу</h1>
+    <h1 class="display-8 font-weight-normal">Добавление студентов в базу</h1>
     <p class="lead font-weight-normal">Их можно добавить двумя способами, через форму на главной странице или через файл excel</p>
   </div>
 </div>
 
-<div class="container w-50">
+<div class="container">
   <div class="bg-dark mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center text-white overflow-hidden">
     <div class="my-3 py-3">
       <h2 class="display-5">Добавление через форму на главной</h2>
       <p class="lead">Поля без звёздочек не обязательны</p>
     </div>
-    <img src="{% static 'images/form.png' %}" class="img-fluid" alt="Responsive image">
+    <img src="{% static 'images/form.png' %}" alt="Добавление через форму на главной" class="img-thumbnail">
   </div>
 </div>
 
+<div class="container mt-2">
+  <div class="bg-dark mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-white overflow-hidden">
+    <div class="my-3 py-3">
+      <h2 class="display-5">Добавление списком через excel файл</h2>
+      <p class="lead">Примечание: при указании группы, специальности и университета - сначала они <span class="text-danger">обязательно</span> должны быть добавлены во вкладке образование</p>
+      <p class="lead">Пример файла excel для загрузки (его также можно скачать во вкладке excel):</p>
+    </div>
+    <img src="{% static 'images/example_import_excel.png' %}" alt="Добавление списком через excel файл" class="img-thumbnail">
+    <p class="lead">1 колонка - ФИО, 2 - год выпуска, 3 - Бюджет / Платник, 4 - первое место прохождения практики,
+    5 - второе место прохождения практики, 6 - номер телефона, 7 - email, 8 - группа (<span class="text-danger"> см. примечание</span>),
+    9 - специальность (<span class="text-danger"> см. примечание</span>), 10 - университет (<span class="text-danger"> см. примечание</span>),
+    11 - вакансия (может быть не указана, тогда на главной будет написано безработный), 12 - по специальности или нет (тоже можно не указывать, если не указали вакансию)</p>
+  </div>
+</div>
+
+<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
+  <div class="col-md-5 p-lg-5 mx-auto my-5">
+    <h1 class="display-8 font-weight-normal">Добавление организаций, вакансий и умений к вакансиям в базу</h1>
+    <p class="lead font-weight-normal">Они добавляются во вкладке работа</p>
+  </div>
+</div>
+
+<div class="container mt-2">
+  <div class="bg-dark mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-white overflow-hidden">
+    <div class="my-3 py-3">
+      <h2 class="display-5">Добавление организации</h2>
+      <p class="lead">Вводите название организации в поле и нажимаете добавить / enter</p>
+    </div>
+    <img src="{% static 'images/added_organization.png' %}" alt="Добавление организации" class="img-thumbnail">
+  </div>
+</div>
+
+<div class="container mt-2">
+  <div class="bg-dark mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center text-white overflow-hidden">
+    <div class="my-3 py-3">
+      <h2 class="display-5">Добавление вакансии</h2>
+      <p class="lead">Организация появится в списке ниже и под ней есть кнопка добавить, нажимаете её
+        и вылезает окно с полем куда надо вписать название вакансии и нажать enter</p>
+    </div>
+    <img src="{% static 'images/added_vacancy.png' %}" alt="Добавление вакансии" class="img-thumbnail">
+  </div>
+</div>
+
+<div class="container mt-2">
+  <div class="bg-dark mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center text-white overflow-hidden">
+    <div class="my-3 py-3">
+      <h2 class="display-5">Добавление умений для вакансии</h2>
+      <p class="lead">После добавления вакансии её карточка появится снизу.
+      В ней будет поле, в которое надо вписать умение и нажать enter</p>
+    </div>
+    <img src="{% static 'images/added_skills_for_vacancy.png' %}" alt="Добавление умений для вакансии" class="img-thumbnail">
+  </div>
+</div>
+
+<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
+  <div class="col-md-5 p-lg-5 mx-auto my-5">
+    <h1 class="display-8 font-weight-normal">Добавление университетов, специальностей и групп в базу</h1>
+    <p class="lead font-weight-normal">Они добавляются через форму во вкладке образование (после добавления при добавлении студента можно будет выбрать группу из списка)</p>
+  </div>
+</div>
+
+<div class="container mt-2">
+  <div class="bg-dark mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-white overflow-hidden">
+    <div class="my-3 py-3">
+      <h2 class="display-5">Добавление университетов</h2>
+      <p class="lead">В форме образование в поле "Добавить университет / спо" вписать название и нажать добавить/enter</p>
+    </div>
+    <img src="{% static 'images/added_university.png' %}" alt="Добавление университетов" class="img-thumbnail">
+  </div>
+</div>
+
+<div class="container mt-2">
+  <div class="bg-dark mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-white overflow-hidden">
+    <div class="my-3 py-3">
+      <h2 class="display-5">Добавление группы к специальности</h2>
+      <p class="lead">В форме добавить группу написать название группы и из выпадающего списка выбрать группу,
+        в скобках будет университет/спо относящийся к этой группе</p>
+    </div>
+    <img src="{% static 'images/added_group.png' %}" alt="Добавление группы к специальности" class="img-thumbnail">
+  </div>
+</div>
+
+<div class="container mt-2">
+  <div class="bg-dark mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center text-white overflow-hidden">
+    <div class="my-3 py-3">
+      <h2 class="display-5">Добавление специальности</h2>
+      <p class="lead">Снизу от форм будет список университетов, в них список специальностей, групп и студентов относящихся к этой группе (при нажатии на ФИО вы перейдёте на страницу студента)</p>
+    </div>
+    <img src="{% static 'images/added_specialty.png' %}" alt="Добавление специальности" class="img-thumbnail">
+  </div>
+</div>
+
+<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
+  <div class="col-md-5 p-lg-5 mx-auto my-5">
+    <h1 class="display-8 font-weight-normal">Настройка цветов полей</h1>
+    <p class="lead font-weight-normal">Их можно добавить/исправить во вкладке настройки</p>
+  </div>
+</div>
+
+<div class="container mt-2">
+  <div class="bg-dark mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-white overflow-hidden">
+    <div class="my-3 py-3">
+      <h2 class="display-5">Добавление цвета полей</h2>
+      <p class="lead font-weight-normal">В поле выбираете из списка занятось, в другом поле выбераете цвет и нажимаете добавить
+        (<span class="text-danger">при добавлении новых занятостей они изначально будут булые в списке цветов</span>)</p>
+    </div>
+    <img src="{% static 'images/added_color.png' %}" alt="Добавление цвета полей" class="img-thumbnail">
+  </div>
+</div>
+
+<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
+  <div class="col-md-5 p-lg-5 mx-auto my-5">
+    <h1 class="display-8 font-weight-normal">Добавление документов к студентам</h1>
+    <p class="lead font-weight-normal">Их можно добавить нажав кнопку документы в таблице</p>
+  </div>
+</div>
+
+<div class="container mt-2">
+  <div class="bg-dark mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center text-white overflow-hidden">
+    <div class="my-3 py-3">
+      <h2 class="display-5">Добавление документа</h2>
+      <p class="lead font-weight-normal">В поле навание документа пишите название, в другом поле прикрепляете файл с компьютера
+      (<span class="text-danger">файл может быть любого формата, если это картинка (.jpg, .jpeg, .png), то она там отобразится, если нет,
+        то отобразится название, нажав по которому скачается файл который вы загружали</span>)</p>
+    </div>
+    <img src="{% static 'images/added_document.png' %}" alt="Добавление документа" class="img-thumbnail">
+    <img src="{% static 'images/list_document.png' %}" alt="Добавление документа" class="img-thumbnail mt-5">
+  </div>
+</div>
+
+<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
+  <div class="col-md-5 p-lg-5 mx-auto my-5">
+    <h1 class="display-8 font-weight-normal">Страница студента, добавление звонков и умений студента</h1>
+    <p class="lead font-weight-normal">На страницу можно перейти нажав на кнопку перейти в таблице</p>
+  </div>
+</div>
+
+<div class="container mt-2">
+  <div class="bg-dark mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center text-white overflow-hidden">
+    <div class="my-3 py-3">
+      <h2 class="display-5">Добавление умений</h2>
+      <p class="lead font-weight-normal">Перейдя на страницу студента вы увидите всю информацию про него,
+      пролистав ниже вы увидите его вакансию (если при добавлении студента вы её указали,
+        если нет, то в таблице у него будет написано "безработный", если его умения
+        совпадают с умениями вакансии (со страници с вакансиями), то ему предложится эта вакансия,
+        если ему назначить эту вакансию, она будет не доступна для других и
+        на странице с вакансиями будет видно кому она принадлежит) или добавление умений.
+      в поле надо написать название умения и нажать добавить/enter</p>
+    </div>
+    <img src="{% static 'images/added_skills_for_student.png' %}" alt="Добавление умений" class="img-thumbnail">
+    <img src="{% static 'images/vacancy_name.png' %}" alt="Добавление умений" class="img-thumbnail mt-5">
+  </div>
+</div>
+
+<div class="container mt-2">
+  <div class="bg-dark mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center text-white overflow-hidden">
+    <div class="my-3 py-3">
+      <h2 class="display-5">Добавление звонков</h2>
+      <p class="lead font-weight-normal">В самом низу на странице студента будет форма добавления звонков,
+      где можно выбрать дату звонка и описание. Если кнопка подробнее стала красной, значит один из
+      звонков истёк (т.е в это время нужно позвонить), этот звонок, на странице студента будет синим,
+      если нажать по кнопке завершить, звонок уберётся; заонок будет серым если он ещё не истёк.</p>
+    </div>
+    <img src="{% static 'images/calls.png' %}" alt="Добавление звонков" class="img-thumbnail">
+  </div>
+</div>
 {% endblock %}
