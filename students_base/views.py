@@ -238,35 +238,71 @@ class Spec(View):
 
 
 def export_students_xls(request):
-    response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="students.xls"'
+    if request.method == 'POST':
+        response = HttpResponse(content_type='application/ms-excel')
+        response['Content-Disposition'] = 'attachment; filename="students.xls"'
 
-    wb = xlwt.Workbook(encoding='utf-8')
-    ws = wb.add_sheet('Студенты')
+        wb = xlwt.Workbook(encoding='utf-8')
+        ws = wb.add_sheet('Студенты')
 
-    row_num = 0
+        row_num = 0
 
-    font_style = xlwt.XFStyle()
-    font_style.font.bold = True
+        font_style = xlwt.XFStyle()
+        font_style.font.bold = True
 
-    columns = ['ФИО', 'e-mail', 'телефон', 'форма финансирования',
-               'трудоустроенность', 'вид занятости']
+        columns = []
+        print(request.POST.values())
+        fields_dict = request.POST.dict()
+        del fields_dict["csrfmiddlewaretoken"]
 
-    for col_num in xrange(len(columns)):
-        ws.write(row_num, col_num, columns[col_num], font_style)
+        for field in fields_dict.values():
+            columns.append(field)
 
-    # Sheet body, remaining rows
-    font_style = xlwt.XFStyle()
+        # columns = ['ФИО', 'e-mail', 'телефон', 'форма финансирования',
+        #            'трудоустроенность', 'вид занятости']
 
-    rows = Job.objects.all().values_list('fio', 'email', 'phone_number',
-                                         'budget', 'vacancy_st', 'on_speciality')
-    for row in rows:
-        row_num += 1
-        for col_num in xrange(len(row)):
-            ws.write(row_num, col_num, row[col_num], font_style)
+        for col_num in xrange(len(columns)):
+            ws.write(row_num, col_num, columns[col_num], font_style)
 
-    wb.save(response)
-    return response
+        # Sheet body, remaining rows
+        font_style = xlwt.XFStyle()
+
+        rows = []
+        for student in Job.objects.all():
+            student_info = []
+            if request.POST.get("fio_check") is not None:
+                student_info.append(student.fio)
+            if request.POST.get("release_year_check") is not None:
+                student_info.append(student.release_year)
+            if request.POST.get("employment_check") is not None:
+                if student.expiry_date is not None:
+                    student_info.append(student.employment + str(student.expiry_date))
+                else:
+                    student_info.append(student.employment)
+            if request.POST.get("specialty_check") is not None:
+                student_info.append(student.specialty.title)
+            if request.POST.get("practice_one_check") is not None:
+                student_info.append(student.practice_one)
+            if request.POST.get("practice_two_check") is not None:
+                student_info.append(student.practice_two)
+            if request.POST.get("vacancy_st_check") is not None:
+                if student.vacancy_st is not None:
+                    student_info.append(student.vacancy_st)
+                else:
+                    student_info.append("Безработный")
+            if request.POST.get("on_speciality_check") is not None:
+                student_info.append(student.on_speciality)
+            rows.append(student_info)
+
+        # rows = Job.objects.all().values_list('fio', 'email', 'phone_number',
+        #                                      'budget', 'vacancy_st', 'on_speciality')
+        for row in rows:
+            row_num += 1
+            for col_num in xrange(len(row)):
+                ws.write(row_num, col_num, row[col_num], font_style)
+
+        wb.save(response)
+        return response
 
 
 def import_students_excel(request):

@@ -139,7 +139,42 @@
 
                 </div>
                 <hr>
-                <a href="{% url 'export_students_xls' %}" type="button" class="btn btn-light btn-lg btn-block">Экспорт данных в Excel</a>
+                <form action="{% url 'export_students_xls' %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-check form-check-inline">
+                        <label class="form-check-label" for="check_fio">ФИО</label>
+                        <input class="form-check-input" type="checkbox" id="check_fio" value="ФИО" name="fio_check">
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <label class="form-check-label" for="check_fio">Дата рождения</label>
+                        <input class="form-check-input" type="checkbox" id="release_year_check" value="Дата рождения" name="release_year_check">
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <label class="form-check-label" for="check_fio">Занятость</label>
+                        <input class="form-check-input" type="checkbox" id="employment_check" value="Занятость" name="employment_check">
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <label class="form-check-label" for="check_fio">Специальность</label>
+                        <input class="form-check-input" type="checkbox" id="specialty_check" value="Специальность" name="specialty_check">
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <label class="form-check-label" for="check_fio">Место прохождения первой практики</label>
+                        <input class="form-check-input" type="checkbox" id="practice_one_check" value="Место прохождения первой практики" name="practice_one_check">
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <label class="form-check-label" for="check_fio">Место прохождения второй практики</label>
+                        <input class="form-check-input" type="checkbox" id="practice_two_check" value="Место прохождения второй практики" name="practice_two_check">
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <label class="form-check-label" for="check_fio">Вакансия</label>
+                        <input class="form-check-input" type="checkbox" id="vacancy_st_check" value="Вакансия" name="vacancy_st_check">
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <label class="form-check-label" for="check_fio">Вид занятости</label>
+                        <input class="form-check-input" type="checkbox" id="on_speciality_check" value="Вид занятости" name="on_speciality_check">
+                    </div>
+                    <input type="submit" value="Экспорт данных в Excel" class="btn btn-light btn-lg btn-block">
+                </form>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
