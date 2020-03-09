@@ -10,7 +10,7 @@ class PersonForm(forms.ModelForm):
                   'practice_one', 'practice_two', 'phone_number', 'email', 'expiry_date', 'employment']
         labels = {
             'fio': '*ФИО',
-            'release_year': '*Дата рождения',
+            'release_year': '*Год выпуска',
             'employment': '*Занятость',
             'practice_one': '*Место прохождения первой практики',
             'practice_two': '*Место прохождения второй практики',
