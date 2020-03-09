@@ -5,6 +5,8 @@
 {% endblock %}
 
 {% block content %}
+{% load static %}
+
 <div class="container mt-5">
     <form action="{% url 'index' %}" method="POST">
             {% csrf_token %}
@@ -128,7 +130,7 @@
             </div>
             <div class="modal-body">
                 <div>
-                    <p>Загрузить списком студентов (<a href="{{ MEDIA_URL }}example.xls" download>скачать пример</a>):</p>
+                    <p>Загрузить списком студентов (<a href="{% static 'excel/example.xls' %}" download>скачать пример</a>):</p>
                     <form action="{% url 'import_students_excel' %}" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="mt-3">
