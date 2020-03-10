@@ -6,6 +6,8 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
 from xlwt.compat import xrange
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 from .models import *
 from django.views.generic import View
@@ -19,6 +21,7 @@ def check_calls(person):
             call.save()
 
 
+@method_decorator(login_required, name='dispatch')
 class Index(View):
     template = 'index.html'
 
@@ -57,6 +60,7 @@ class Index(View):
         return render(request, self.template, context)
 
 
+@method_decorator(login_required, name='dispatch')
 class VacPage(View):
     template = 'vacancy.html'
 
@@ -151,6 +155,7 @@ class AddDocument(View):
                 return HttpResponse(status=404)
 
 
+@method_decorator(login_required, name='dispatch')
 class StudentDetail(View):
     template = 'student_detail.html'
 
@@ -205,6 +210,7 @@ class CancleCalls(View):
             return redirect('/students_base/student_detail/' + str(call.fio.id))
 
 
+@method_decorator(login_required, name='dispatch')
 class Education(View):
     template = 'education.html'
 
@@ -346,6 +352,7 @@ class AddGroup(View):
         return HttpResponse(status=404)
 
 
+@method_decorator(login_required, name='dispatch')
 class Settings(View):
     template = 'settings.html'
 
@@ -368,6 +375,7 @@ class Settings(View):
             return redirect('/students_base/settings/')
 
 
+@method_decorator(login_required, name='dispatch')
 class Documentation(View):
     template = "documentation.html"
 
