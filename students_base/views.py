@@ -331,11 +331,17 @@ def import_students_excel(request):
             student.phone_number = sheet.row_values(rownum)[5]
             student.email = sheet.row_values(rownum)[6]
             student.employment = sheet.row_values(rownum)[7].split("|")[0]
+            try:
+                el = List_of_employment.objects.get(employment=sheet.row_values(rownum)[7].split("|")[0])
+                student.color = el.color
+            except:
+                el = List_of_employment()
+                el.employment = sheet.row_values(rownum)[7].split("|")[0]
+                el.save()
             if len(sheet.row_values(rownum)[7].split("|")) > 1:
                 date = sheet.row_values(rownum)[7].split("|")[1]
                 student.expiry_date = datetime.datetime.strptime(date, "%d.%m.%Y")
             coll = College.objects.get(title=sheet.row_values(rownum)[10])
-            print(sheet.row_values(rownum)[9])
             spec = coll.specialty_set.get(title=sheet.row_values(rownum)[9])
             gr = spec.group_set.get(title=sheet.row_values(rownum)[8])
             student.specialty = gr
