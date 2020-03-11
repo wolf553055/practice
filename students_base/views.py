@@ -30,9 +30,6 @@ class Index(View):
         list_employments = List_of_employment.objects.order_by("employment")
         for person in people:
             check_calls(person)
-            employment = List_of_employment.objects.get(employment=person.employment)
-            person.color = employment.color
-            person.save()
         context = {
             'form': PersonForm(),
             'list_employments': list_employments,
@@ -44,13 +41,20 @@ class Index(View):
     def post(self, request):
         bound_form = PersonForm(request.POST)
         is_employment = request.POST.get("employment")
-        el = List_of_employment.objects.filter(employment=is_employment)
-        if not el:
-            em = List_of_employment()
-            em.employment = is_employment
-            em.save()
+        try:
+            el = List_of_employment.objects.get(employment=is_employment)
+            color = el.color
+        except:
+            el = List_of_employment()
+            el.employment = is_employment
+            el.save()
+            color = None
         if bound_form.is_valid():
             bound_form.save()
+            people = Job.objects.filter(employment=is_employment)
+            for person in people:
+                person.color = color
+                person.save()
             return redirect('/students_base')
         else:
             print(bound_form.errors)

@@ -7,7 +7,8 @@ class PersonForm(forms.ModelForm):
     class Meta:
         model = Job
         fields = ['fio', 'release_year', 'budget', 'specialty', 'vacancy_st', 'on_speciality',
-                  'practice_one', 'practice_two', 'phone_number', 'email', 'expiry_date', 'employment']
+                  'practice_one', 'practice_two', 'phone_number', 'email',
+                  'expiry_date', 'employment', 'color']
         labels = {
             'fio': '*ФИО',
             'release_year': '*Год выпуска',
@@ -20,7 +21,8 @@ class PersonForm(forms.ModelForm):
             'specialty': '*Специальность',
             'vacancy_st': 'Вакансия',
             'on_speciality': 'Трудоустроенность',
-            'expiry_date': 'Если в армии / декрет, то до какого числа'
+            'expiry_date': 'Если в армии / декрет, то до какого числа',
+            'color': ''
         }
         widgets = {
             'fio': forms.TextInput(attrs={'class': 'form-control'}),
@@ -35,7 +37,8 @@ class PersonForm(forms.ModelForm):
             'specialty': forms.Select(attrs={'class': 'form-control'}),
             'vacancy_st': forms.TextInput(attrs={'class': 'form-control'}),
             'on_speciality': forms.Select(attrs={'class': 'form-control'}),
-            'expiry_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'})
+            'expiry_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'color': forms.TextInput(attrs={'class': 'form-control', 'type': 'hidden'}),
         }
 
 
