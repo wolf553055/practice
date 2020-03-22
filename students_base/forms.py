@@ -4,7 +4,13 @@ from .models import *
 
 
 class PersonForm(forms.ModelForm):
+    """
+    Класс формы для добавления студентов
+    """
     class Meta:
+        """
+        Класс для определения полей модели Job
+        """
         model = Job
         fields = ['fio', 'release_year', 'budget', 'specialty', 'vacancy_st', 'on_speciality',
                   'practice_one', 'practice_two', 'phone_number', 'email',
@@ -41,7 +47,13 @@ class PersonForm(forms.ModelForm):
 
 
 class OrganizationForm(forms.ModelForm):
+    """
+    Класс формы для добавления организации
+    """
     class Meta:
+        """
+        Класс для определения полей модели Organization
+        """
         model = Organization
         fields = '__all__'
         labels = {
@@ -53,6 +65,9 @@ class OrganizationForm(forms.ModelForm):
 
 
 class ImageForm(forms.Form):
+    """
+    Класс формы для добавления файла/картинки документов студента
+    """
     docfile = forms.FileField(
         label='Добавить документ',
         help_text='max. 42 megabytes'
@@ -60,7 +75,13 @@ class ImageForm(forms.Form):
 
 
 class CallsForm(forms.ModelForm):
+    """
+    Класс формы для добавления звонков
+    """
     class Meta:
+        """
+        Класс для определения полей модели Calls
+        """
         model = Calls
         fields = '__all__'
         widgets = {
@@ -69,7 +90,13 @@ class CallsForm(forms.ModelForm):
 
 
 class CollegeForm(forms.ModelForm):
+    """
+    Класс формы для добавления колледжей
+    """
     class Meta:
+        """
+        Класс для определения полей модели College
+        """
         model = College
         fields = '__all__'
         widgets = {
@@ -81,7 +108,13 @@ class CollegeForm(forms.ModelForm):
 
 
 class GroupForm(forms.ModelForm):
+    """
+    Класс формы для добавления группы
+    """
     class Meta:
+        """
+        Класс для определения полей модели Group
+        """
         model = Group
         fields = '__all__'
         widgets = {

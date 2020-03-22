@@ -15,6 +15,11 @@ from .forms import *
 
 
 def check_calls(person):
+    """
+    Функция для проверки статуса звонков
+    :param person: студент
+    :return: редактирует статусы звонков в БД
+    """
     for call in person.calls_set.order_by('-call_time').filter(call_time__lte=datetime.datetime.now()):
         if call.status != 'Завершён':
             call.status = 'Истёк'
@@ -23,9 +28,17 @@ def check_calls(person):
 
 @method_decorator(login_required, name='dispatch')
 class Index(View):
+    """
+    Класс для отображения главной страницы
+    """
     template = 'index.html'
 
     def get(self, request):
+        """
+        Функция для обработки get запроса для главной страницы
+        :param request: запрос
+        :return: рендер главной страницы
+        """
         people = Job.objects.order_by("fio")
         list_employments = List_of_employment.objects.order_by("employment")
         for person in people:
@@ -39,6 +52,12 @@ class Index(View):
         return render(request, self.template, context)
 
     def post(self, request):
+        """
+        Функция для обработки post запроса для главной страницы
+        :param request:
+        :return: Если форма пюез ошибок, то redirect на главную иначе рендер
+        главной страницы с ошибкой
+        """
         bound_form = PersonForm(request.POST)
         is_employment = request.POST.get("employment")
         try:
@@ -66,9 +85,17 @@ class Index(View):
 
 @method_decorator(login_required, name='dispatch')
 class VacPage(View):
+    """
+    Класс для отображения страницы с вакансиями
+    """
     template = 'vacancy.html'
 
     def get(self, request):
+        """
+        Функция для обработки get запроса для страницы с вакансиями
+        :param request:
+        :return: render страницы с вакансиями
+        """
         org = Organization.objects.order_by("title")
         context = {
             'form_org': OrganizationForm(),
@@ -78,6 +105,9 @@ class VacPage(View):
 
 
 class VacSkPage(View):
+    """
+    Класс для добавления умений для вакансий
+    """
     def post(self, request):
         if request.method == 'POST':
             sk_vac = Skills_Vacancy()
@@ -90,6 +120,9 @@ class VacSkPage(View):
 
 
 class StSkPage(View):
+    """
+    Класс для добавления умений для студента
+    """
     def post(self, request):
         id_st = request.POST.get("id")
         student = Job.objects.get(id=id_st)
@@ -103,6 +136,9 @@ class StSkPage(View):
 
 
 class AddVacancy(View):
+    """
+    Класс для добавления вакансий
+    """
     def post(self, request):
         vacancy = request.POST.get("vacancy")
         id_st = request.POST.get("id_st")
@@ -121,6 +157,9 @@ class AddVacancy(View):
 
 
 class AddOrganization(View):
+    """
+    Класс для добавления организаций
+    """
     def post(self, request):
         bound_form = OrganizationForm(request.POST)
         if bound_form.is_valid():
@@ -130,6 +169,9 @@ class AddOrganization(View):
 
 
 class AddVacancyOrganization(View):
+    """
+    Класс для добавления вакансий к организациям
+    """
     def post(self, request):
         if request.method == 'POST':
             vacancy = Vacancy()
@@ -143,6 +185,9 @@ class AddVacancyOrganization(View):
 
 
 class AddDocument(View):
+    """
+    Класс для добавления документов
+    """
     def post(self, request):
         expansions = ['jpg', 'jpeg', 'png']
         if request.method == 'POST':
@@ -161,9 +206,17 @@ class AddDocument(View):
 
 @method_decorator(login_required, name='dispatch')
 class StudentDetail(View):
+    """
+    Класс для отображения страницы студента
+    """
     template = 'student_detail.html'
 
     def check_vacancy(self, person):
+        """
+        Функция для поиска вакансий для студента исходя из умений
+        :param person: студент
+        :return: вакансии
+        """
         vacancy_p = []
         sch = 0
         vacancy = Vacancy.objects.order_by("title")
@@ -179,6 +232,12 @@ class StudentDetail(View):
         return vacancy_p
 
     def get(self, request, pk):
+        """
+        Функция для обработки get запроса для страницы студента
+        :param request: запрос
+        :param pk: id студента
+        :return: render страницы студента
+        """
         person = get_object_or_404(Job, id=pk)
         check_calls(person)
         context = {
@@ -189,6 +248,12 @@ class StudentDetail(View):
         return render(request, self.template, context)
 
     def post(self, request, pk):
+        """
+        Функция для обработки post запроса для страницы студента
+        :param request: запрос
+        :param pk: id студента
+        :return: redirect на страницу студента
+        """
         person = get_object_or_404(Job, id=pk)
         context = {
             'person': person,
@@ -206,6 +271,9 @@ class StudentDetail(View):
 
 
 class CancleCalls(View):
+    """
+    Класс для завершения звонка
+    """
     def post(self, request, pk):
         if request.method == 'POST':
             call = get_object_or_404(Calls, id=pk)
@@ -216,9 +284,17 @@ class CancleCalls(View):
 
 @method_decorator(login_required, name='dispatch')
 class Education(View):
+    """
+    Класс для отображения страницы образование
+    """
     template = 'education.html'
 
     def get(self, request):
+        """
+        Функция для обработки post запроса для страницы образование
+        :param request: запрос
+        :return: render страницы образование
+        """
         colleges = College.objects.all()
         context = {
             'form': CollegeForm(),
@@ -228,6 +304,12 @@ class Education(View):
         return render(request, self.template, context)
 
     def post(self, request):
+        """
+        Функция для обработки post запроса для страницы образование
+        :param request: запрос
+        :return: redirect на страницу образование, если форма без ошибок иначе
+        страницу 404
+        """
         bound_form = CollegeForm(request.POST)
         if bound_form.is_valid():
             bound_form.save()
@@ -236,6 +318,9 @@ class Education(View):
 
 
 class Spec(View):
+    """
+    Класс для добавления специальности
+    """
     def post(self, request):
         if request.method == 'POST':
             college = College.objects.get(id=request.POST.get("college"))
@@ -248,6 +333,11 @@ class Spec(View):
 
 
 def export_students_xls(request):
+    """
+    Функция для экспорта студентов в excel
+    :param request: запрос
+    :return: запрос
+    """
     if request.method == 'POST':
         response = HttpResponse(content_type='application/ms-excel')
         response['Content-Disposition'] = 'attachment; filename="students.xls"'
@@ -316,6 +406,11 @@ def export_students_xls(request):
 
 
 def import_students_excel(request):
+    """
+    Функция для импорта студентов в excel
+    :param request: запрос
+    :return: файл excel со студентами
+    """
     if request.method == 'POST':
         filename = request.FILES['filename']
         file_import = xlrd.open_workbook(file_contents=filename.read())
@@ -354,6 +449,9 @@ def import_students_excel(request):
 
 
 class AddGroup(View):
+    """
+    Класс для добавления группы
+    """
     def post(self, request):
         bound_form = GroupForm(request.POST)
         if bound_form.is_valid():
@@ -364,9 +462,17 @@ class AddGroup(View):
 
 @method_decorator(login_required, name='dispatch')
 class Settings(View):
+    """
+    Класс для отображения страницы с настройками
+    """
     template = 'settings.html'
 
     def get(self, request):
+        """
+        Функция для обработки get запроса для страницы с настройками
+        :param request: запрос
+        :return: render страницы с настройками
+        """
         employments = List_of_employment.objects.all()
         context = {
             'employments': employments,
@@ -374,6 +480,11 @@ class Settings(View):
         return render(request, self.template, context)
 
     def post(self, request):
+        """
+        Функция для обработки post запроса для страницы с настройками
+        :param request: запрос
+        :return: redirect на страницу с настройками
+        """
         if request.method == 'POST':
             employment = get_object_or_404(List_of_employment, id=request.POST.get("employment"))
             employment.color = request.POST.get("color")
@@ -387,9 +498,17 @@ class Settings(View):
 
 @method_decorator(login_required, name='dispatch')
 class Documentation(View):
+    """
+    Класс для отображения страницы с документацией
+    """
     template = "documentation.html"
 
     def get(self, request):
+        """
+        Функция для обработки get запроса для страницы с документацией
+        :param request: запрос
+        :return: render страницы с документацией
+        """
         context = {
             'title': 'Документация',
         }

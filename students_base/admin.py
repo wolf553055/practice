@@ -1,10 +1,10 @@
 from django.contrib import admin
 from .models import *
 
-# Register your models here.
-admin.site.register(Job)
-admin.site.register(Organization)
-admin.site.register(Vacancy)
-admin.site.register(College)
-admin.site.register(Specialty)
-admin.site.register(Group)
+# Регистрация моделей в админ панели
+admin.site.register(Job)  # модель студентов
+admin.site.register(Organization)  # модель организаций
+admin.site.register(Vacancy)  # модель вакансий
+admin.site.register(College)  # модель учебных заведений
+admin.site.register(Specialty)  # модель специальностей
+admin.site.register(Group)  # модель групп
